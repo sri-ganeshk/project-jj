@@ -527,19 +527,19 @@ gantt
     title Implementation Timeline
     dateFormat  YYYY-MM-DD
     section Phase 1 - Foundation
-        Database Schema & Models          :a1, 2026-01-22, 5d
+        Database Schema and Models        :a1, 2026-01-22, 5d
         Backend API Skeleton              :a2, after a1, 3d
         Frontend Scaffold                 :a3, after a1, 3d
     section Phase 2 - Core Modules
         Task Scheduling Module            :b1, after a2, 7d
         Risk Prediction ML Pipeline       :b2, after a2, 10d
-        Gantt Chart UI                    :b3, after a3, 5d
+        Schedule Chart UI                 :b3, after a3, 5d
     section Phase 3 - Reporting
         Report Generator                  :c1, after b1, 5d
-        Dashboard & Visualizations        :c2, after b3, 5d
-    section Phase 4 - Integration & Testing
+        Dashboard and Visualizations      :c2, after b3, 5d
+    section Phase 4 - Integration and Testing
         End-to-End Integration            :d1, after c1, 5d
-        Testing & Performance Tuning      :d2, after d1, 7d
+        Testing and Performance Tuning    :d2, after d1, 7d
         User Evaluation                   :d3, after d2, 3d
 ```
 
