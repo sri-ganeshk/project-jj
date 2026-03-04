@@ -1,0 +1,301 @@
+Project ID,Project Name,Project Type,Location,Start Date,End Date,Project Status,Priority,Budget,Bug_Density,Scope_Change_Frequency
+P001,Renovation of a School Project 001,Renovation,Texas,21/07/2024,08/08/2024,Behind,Medium,9621,5.0,5
+P001,Renovation of a School Project 001,Renovation,New Jersey,21/07/2024,12/08/2024,Behind,High,7814,6.18,5
+P001,Renovation of a School Project 001,Renovation,Ohio,21/07/2024,10/08/2024,Behind,High,1028,3.64,4
+P002,Innovation of a Classroom Project 002,Innovation,Pennsylvania,04/06/2024,12/07/2025,On Track,High,1530,0.86,0
+P002,Innovation of a Classroom Project 002,Innovation,New York,04/06/2024,26/06/2025,On Track,Medium,7201,2.38,1
+P002,Innovation of a Classroom Project 002,Innovation,California,04/06/2024,25/03/2025,On Track,Low,9814,2.41,1
+P003,Construction of a Hospital Wing Project 003,Construction,Pennsylvania,20/07/2024,22/08/2024,Completed,Low,7981,0.32,0
+P003,Construction of a Hospital Wing Project 003,Construction,Virginia,20/07/2024,25/09/2024,Completed,Medium,1032,0.65,1
+P003,Construction of a Hospital Wing Project 003,Construction,Ohio,20/07/2024,22/08/2024,Completed,Medium,8546,1.13,1
+P004,Road Expansion Project 004,Infrastructure,Pennsylvania,25/04/2024,06/05/2024,Completed,Medium,3728,0.99,0
+P004,Road Expansion Project 004,Infrastructure,Texas,25/04/2024,05/05/2024,Completed,High,9707,1.14,0
+P004,Road Expansion Project 004,Infrastructure,Texas,25/04/2024,10/05/2024,Completed,Medium,5712,1.76,1
+P005,Bridge Maintenance Project 005,Maintenance,Michigan,30/06/2024,31/07/2025,Behind,Medium,3453,5.99,4
+P005,Bridge Maintenance Project 005,Maintenance,California,30/06/2024,02/08/2024,Behind,Medium,2896,6.71,4
+P005,Bridge Maintenance Project 005,Maintenance,Virginia,30/06/2024,30/06/2025,Behind,High,6463,6.9,2
+P006,Office Building Renovation Project 006,Renovation,Michigan,09/08/2024,11/09/2024,Behind,Low,3206,6.46,2
+P006,Office Building Renovation Project 006,Renovation,North Carolina,09/08/2024,11/09/2024,Behind,Medium,6477,5.29,3
+P006,Office Building Renovation Project 006,Renovation,Pennsylvania,09/08/2024,20/02/2025,Behind,High,8634,3.98,4
+P007,Apartment Complex Development Project 007,Other,California,06/08/2024,17/11/2024,On Track,High,2552,0.35,1
+P007,Apartment Complex Development Project 007,Other,Florida,06/08/2024,29/11/2024,On Track,Medium,4699,2.04,1
+P007,Apartment Complex Development Project 007,Other,Pennsylvania,06/08/2024,17/11/2024,On Track,Low,1720,2.01,1
+P008,Commercial Center Construction Project 008,Construction,Illinois,17/04/2024,13/09/2024,On Track,Medium,9458,1.6,1
+P008,Commercial Center Construction Project 008,Construction,Washington,17/04/2024,05/11/2024,On Track,Low,4735,2.48,0
+P008,Commercial Center Construction Project 008,Construction,Georgia,17/04/2024,19/10/2024,On Track,High,9460,0.17,0
+P009,Highway Reconstruction Project 009,Other,Texas,27/04/2024,28/04/2025,On Hold,High,6385,1.24,2
+P009,Highway Reconstruction Project 009,Other,Virginia,27/04/2024,01/06/2025,On Hold,Medium,7980,1.66,0
+P009,Highway Reconstruction Project 009,Other,Ohio,27/04/2024,26/05/2025,On Hold,Low,1106,3.67,0
+P010,Airport Expansion Project 010,Other,New Jersey,14/02/2024,15/06/2024,On Track,High,1577,2.39,0
+P010,Airport Expansion Project 010,Other,Ohio,14/02/2024,08/06/2024,On Track,High,3110,0.13,1
+P010,Airport Expansion Project 010,Other,Ohio,14/02/2024,26/05/2024,On Track,Low,3432,0.31,0
+P011,Shopping Mall Renovation Project 011,Renovation,Texas,08/05/2024,28/07/2024,Completed,High,3544,2.47,0
+P011,Shopping Mall Renovation Project 011,Renovation,Georgia,08/05/2024,19/08/2024,Completed,High,7808,2.25,0
+P011,Shopping Mall Renovation Project 011,Renovation,Florida,08/05/2024,01/08/2024,Completed,High,1776,0.37,1
+P012,University Dormitory Construction Project 012,Construction,Georgia,27/01/2024,29/02/2024,Completed,High,1815,1.47,1
+P012,University Dormitory Construction Project 012,Construction,Ohio,27/01/2024,29/02/2024,Completed,High,8915,2.26,1
+P012,University Dormitory Construction Project 012,Construction,New York,27/01/2024,27/06/2025,Completed,Medium,9242,1.81,1
+P013,Sports Stadium Upgrade Project 013,Other,Florida,09/02/2024,24/08/2024,On Hold,Medium,9559,3.45,0
+P013,Sports Stadium Upgrade Project 013,Other,Michigan,09/02/2024,06/07/2024,On Hold,Medium,4795,3.46,1
+P013,Sports Stadium Upgrade Project 013,Other,California,09/02/2024,28/07/2024,On Hold,Medium,5258,3.89,2
+P014,Public Library Renovation Project 014,Renovation,Ohio,30/07/2024,20/12/2024,Behind,Low,8531,4.16,2
+P014,Public Library Renovation Project 014,Renovation,Ohio,30/07/2024,30/01/2025,Behind,Low,3564,7.25,5
+P014,Public Library Renovation Project 014,Renovation,New Jersey,30/07/2024,29/12/2024,Behind,Medium,6213,4.87,3
+P015,Building a Park Project 015,Other,Georgia,17/03/2024,19/04/2024,On Hold,High,4714,3.76,1
+P015,Building a Park Project 015,Other,New Jersey,17/03/2024,19/04/2024,On Hold,Medium,1026,1.92,0
+P015,Building a Park Project 015,Other,North Carolina,17/03/2024,19/04/2024,On Hold,High,5365,3.78,1
+P016,Renovation of a School Project 016,Renovation,Georgia,18/02/2024,25/09/2024,Completed,Medium,3688,0.49,1
+P016,Renovation of a School Project 016,Renovation,Texas,18/02/2024,22/10/2024,Completed,High,3233,1.49,1
+P016,Renovation of a School Project 016,Renovation,Florida,18/02/2024,15/09/2024,Completed,Medium,8366,2.1,0
+P017,Innovation of a Classroom Project 017,Innovation,Virginia,02/04/2024,25/10/2024,On Track,Low,1856,1.71,1
+P017,Innovation of a Classroom Project 017,Innovation,Illinois,02/04/2024,23/09/2024,On Track,High,5620,0.33,0
+P017,Innovation of a Classroom Project 017,Innovation,Georgia,02/04/2024,14/10/2024,On Track,High,1904,1.4,1
+P018,Construction of a Hospital Wing Project 018,Construction,Ohio,09/02/2024,05/03/2024,Behind,Medium,5908,8.0,5
+P018,Construction of a Hospital Wing Project 018,Construction,North Carolina,09/02/2024,01/03/2024,Behind,Medium,2176,7.69,5
+P018,Construction of a Hospital Wing Project 018,Construction,Pennsylvania,09/02/2024,25/02/2024,Behind,Medium,9002,5.1,5
+P019,Road Expansion Project 019,Infrastructure,Texas,10/06/2024,30/12/2024,Behind,High,6821,7.23,2
+P019,Road Expansion Project 019,Infrastructure,Ohio,10/06/2024,25/09/2024,Behind,Medium,7324,3.61,5
+P019,Road Expansion Project 019,Infrastructure,Georgia,10/06/2024,24/12/2024,Behind,Medium,3099,3.08,5
+P020,Bridge Maintenance Project 020,Maintenance,Michigan,10/04/2024,03/07/2024,Completed,Medium,7962,0.47,0
+P020,Bridge Maintenance Project 020,Maintenance,California,10/04/2024,02/08/2024,Completed,High,7221,0.32,0
+P020,Bridge Maintenance Project 020,Maintenance,Michigan,10/04/2024,02/07/2024,Completed,High,7256,1.08,0
+P021,Office Building Renovation Project 021,Renovation,North Carolina,21/03/2024,15/12/2024,Behind,High,8483,3.03,4
+P021,Office Building Renovation Project 021,Renovation,Michigan,21/03/2024,25/09/2024,Behind,High,2463,5.91,5
+P021,Office Building Renovation Project 021,Renovation,Georgia,21/03/2024,20/09/2024,Behind,High,8372,5.91,3
+P022,Apartment Complex Development Project 022,Other,Michigan,09/01/2024,11/04/2024,On Track,High,8903,0.52,1
+P022,Apartment Complex Development Project 022,Other,California,09/01/2024,28/04/2024,On Track,Medium,1255,1.08,1
+P022,Apartment Complex Development Project 022,Other,Virginia,09/01/2024,24/04/2024,On Track,High,1424,2.24,0
+P023,Commercial Center Construction Project 023,Construction,Virginia,04/01/2024,18/05/2024,Behind,High,3662,6.39,2
+P023,Commercial Center Construction Project 023,Construction,North Carolina,04/01/2024,01/06/2024,Behind,Medium,2437,6.03,3
+P023,Commercial Center Construction Project 023,Construction,Illinois,04/01/2024,10/04/2024,Behind,Low,7519,6.49,4
+P024,Highway Reconstruction Project 024,Other,Illinois,16/08/2024,29/08/2024,Completed,Medium,5955,1.93,1
+P024,Highway Reconstruction Project 024,Other,Florida,16/08/2024,04/09/2024,Completed,Low,1799,0.45,0
+P024,Highway Reconstruction Project 024,Other,Michigan,16/08/2024,01/09/2024,Completed,Medium,8925,1.88,1
+P025,Airport Expansion Project 025,Other,Washington,05/05/2024,20/07/2024,On Hold,High,8938,1.09,1
+P025,Airport Expansion Project 025,Other,New Jersey,05/05/2024,17/07/2024,On Hold,Low,8533,1.75,0
+P025,Airport Expansion Project 025,Other,New York,05/05/2024,03/07/2024,On Hold,Medium,8402,3.64,0
+P026,Shopping Mall Renovation Project 026,Renovation,Pennsylvania,08/07/2024,30/04/2025,On Hold,Low,6524,2.54,2
+P026,Shopping Mall Renovation Project 026,Renovation,Illinois,08/07/2024,10/08/2024,On Hold,Medium,8061,1.64,1
+P026,Shopping Mall Renovation Project 026,Renovation,Georgia,08/07/2024,06/04/2025,On Hold,High,2436,2.64,1
+P027,University Dormitory Construction Project 027,Construction,Michigan,03/01/2024,28/12/2024,Completed,High,9670,0.81,1
+P027,University Dormitory Construction Project 027,Construction,Washington,03/01/2024,22/03/2025,Completed,Low,1646,1.16,0
+P027,University Dormitory Construction Project 027,Construction,Ohio,03/01/2024,19/01/2025,Completed,Medium,3853,0.68,0
+P028,Sports Stadium Upgrade Project 028,Other,California,25/07/2024,19/01/2025,Behind,Medium,5266,7.2,2
+P028,Sports Stadium Upgrade Project 028,Other,California,25/07/2024,28/05/2025,Behind,Medium,4878,7.15,3
+P028,Sports Stadium Upgrade Project 028,Other,New York,25/07/2024,16/01/2025,Behind,Low,4589,5.88,3
+P029,Public Library Renovation Project 029,Renovation,North Carolina,10/04/2024,13/05/2024,On Track,Low,3498,1.44,0
+P029,Public Library Renovation Project 029,Renovation,Michigan,10/04/2024,21/12/2024,On Track,High,7342,2.42,0
+P029,Public Library Renovation Project 029,Renovation,Virginia,10/04/2024,23/01/2025,On Track,High,3172,0.1,1
+P030,Building a Park Project 030,Other,Washington,16/07/2024,29/07/2024,On Track,High,8742,1.07,0
+P030,Building a Park Project 030,Other,Pennsylvania,16/07/2024,29/07/2024,On Track,High,4274,0.16,1
+P030,Building a Park Project 030,Other,New York,16/07/2024,29/07/2024,On Track,High,3338,0.2,1
+P031,Renovation of a School Project 031,Renovation,Illinois,19/03/2024,09/06/2024,On Track,High,3147,0.38,0
+P031,Renovation of a School Project 031,Renovation,Georgia,19/03/2024,06/06/2024,On Track,High,8355,1.17,0
+P031,Renovation of a School Project 031,Renovation,Georgia,19/03/2024,03/06/2024,On Track,Medium,4000,1.26,0
+P032,Innovation of a Classroom Project 032,Innovation,New Jersey,02/05/2024,26/02/2025,On Hold,High,4133,3.16,2
+P032,Innovation of a Classroom Project 032,Innovation,New York,02/05/2024,16/04/2025,On Hold,Medium,8258,2.19,1
+P032,Innovation of a Classroom Project 032,Innovation,Washington,02/05/2024,24/03/2025,On Hold,Low,3654,3.72,0
+P033,Construction of a Hospital Wing Project 033,Construction,California,15/05/2024,25/09/2024,Behind,Low,4561,5.61,4
+P033,Construction of a Hospital Wing Project 033,Construction,Texas,15/05/2024,18/10/2024,Behind,High,9743,4.19,4
+P033,Construction of a Hospital Wing Project 033,Construction,New Jersey,15/05/2024,23/09/2024,Behind,High,7316,6.2,5
+P034,Road Expansion Project 034,Infrastructure,Florida,13/06/2024,01/09/2024,Behind,High,2342,7.92,3
+P034,Road Expansion Project 034,Infrastructure,Ohio,13/06/2024,17/08/2024,Behind,High,5899,5.47,2
+P034,Road Expansion Project 034,Infrastructure,Pennsylvania,13/06/2024,21/08/2024,Behind,High,8314,3.21,5
+P035,Bridge Maintenance Project 035,Maintenance,New Jersey,28/06/2024,31/07/2024,On Hold,Medium,7361,2.3,1
+P035,Bridge Maintenance Project 035,Maintenance,Virginia,28/06/2024,31/07/2024,On Hold,Low,6901,3.02,2
+P035,Bridge Maintenance Project 035,Maintenance,New Jersey,28/06/2024,26/04/2025,On Hold,High,5183,2.28,1
+P036,Office Building Renovation Project 036,Renovation,Michigan,26/03/2024,10/07/2024,Behind,High,1220,6.11,3
+P036,Office Building Renovation Project 036,Renovation,Georgia,26/03/2024,29/07/2024,Behind,Medium,6005,4.52,4
+P036,Office Building Renovation Project 036,Renovation,California,26/03/2024,28/06/2024,Behind,High,3891,6.72,4
+P037,Apartment Complex Development Project 037,Other,Virginia,16/01/2024,31/07/2024,Behind,Medium,9160,5.01,3
+P037,Apartment Complex Development Project 037,Other,Pennsylvania,16/01/2024,25/05/2024,Behind,High,1719,6.75,3
+P037,Apartment Complex Development Project 037,Other,Illinois,16/01/2024,13/06/2024,Behind,High,5180,7.24,3
+P038,Commercial Center Construction Project 038,Construction,Texas,15/01/2024,01/03/2024,Behind,Medium,8804,6.72,2
+P038,Commercial Center Construction Project 038,Construction,Michigan,15/01/2024,19/03/2024,Behind,Low,8552,4.11,2
+P038,Commercial Center Construction Project 038,Construction,Michigan,15/01/2024,04/03/2024,Behind,High,6348,6.6,3
+P039,Highway Reconstruction Project 039,Other,Virginia,25/01/2024,23/03/2024,Completed,High,5312,2.23,1
+P039,Highway Reconstruction Project 039,Other,Virginia,25/01/2024,31/03/2024,Completed,High,9232,0.25,0
+P039,Highway Reconstruction Project 039,Other,Michigan,25/01/2024,03/04/2024,Completed,Medium,3291,1.97,0
+P040,Airport Expansion Project 040,Other,Florida,26/01/2024,25/09/2024,Behind,Medium,4414,7.52,5
+P040,Airport Expansion Project 040,Other,Virginia,26/01/2024,29/07/2024,Behind,Medium,9998,5.1,5
+P040,Airport Expansion Project 040,Other,Michigan,26/01/2024,14/08/2024,Behind,High,4869,7.1,2
+P041,Shopping Mall Renovation Project 041,Renovation,Pennsylvania,17/03/2024,21/03/2024,Completed,High,3746,0.97,1
+P041,Shopping Mall Renovation Project 041,Renovation,Florida,17/03/2024,21/03/2024,Completed,Medium,5413,1.41,1
+P041,Shopping Mall Renovation Project 041,Renovation,Georgia,17/03/2024,21/03/2024,Completed,Medium,6416,0.4,0
+P042,University Dormitory Construction Project 042,Construction,North Carolina,31/01/2024,29/05/2024,Behind,High,5512,3.11,4
+P042,University Dormitory Construction Project 042,Construction,California,31/01/2024,30/07/2024,Behind,High,6632,7.55,2
+P042,University Dormitory Construction Project 042,Construction,New Jersey,31/01/2024,02/08/2024,Behind,Medium,3321,7.54,3
+P043,Sports Stadium Upgrade Project 043,Other,California,05/01/2024,02/06/2024,On Track,High,9960,2.4,0
+P043,Sports Stadium Upgrade Project 043,Other,Virginia,05/01/2024,12/05/2024,On Track,High,7019,2.28,0
+P043,Sports Stadium Upgrade Project 043,Other,North Carolina,05/01/2024,23/06/2024,On Track,High,2549,2.19,0
+P044,Public Library Renovation Project 044,Renovation,Georgia,05/04/2024,30/07/2024,Behind,High,4587,4.08,5
+P044,Public Library Renovation Project 044,Renovation,New Jersey,05/04/2024,18/09/2024,Behind,Low,4629,5.53,5
+P044,Public Library Renovation Project 044,Renovation,Washington,05/04/2024,14/09/2024,Behind,High,4113,5.7,2
+P045,Building a Park Project 045,Other,Ohio,11/06/2024,14/07/2024,Completed,Medium,3423,1.21,0
+P045,Building a Park Project 045,Other,Texas,11/06/2024,25/02/2025,Completed,High,2297,1.27,0
+P045,Building a Park Project 045,Other,Virginia,11/06/2024,14/07/2024,Completed,Low,2868,1.66,0
+P046,Renovation of a School Project 046,Renovation,California,13/06/2024,16/06/2024,Completed,High,1771,1.73,0
+P046,Renovation of a School Project 046,Renovation,North Carolina,13/06/2024,16/06/2024,Completed,Medium,1781,2.33,0
+P046,Renovation of a School Project 046,Renovation,Florida,13/06/2024,18/06/2024,Completed,High,7012,2.06,0
+P047,Innovation of a Classroom Project 047,Innovation,Florida,27/06/2024,30/07/2024,On Hold,High,2554,3.11,2
+P047,Innovation of a Classroom Project 047,Innovation,Illinois,27/06/2024,09/01/2025,On Hold,High,8357,1.01,0
+P047,Innovation of a Classroom Project 047,Innovation,Pennsylvania,27/06/2024,25/09/2024,On Hold,High,9034,2.26,2
+P048,Construction of a Hospital Wing Project 048,Construction,Florida,09/06/2024,15/12/2024,Completed,High,5180,0.4,0
+P048,Construction of a Hospital Wing Project 048,Construction,Virginia,09/06/2024,31/10/2024,Completed,Low,5368,0.58,1
+P048,Construction of a Hospital Wing Project 048,Construction,Florida,09/06/2024,02/11/2024,Completed,Medium,3812,2.22,1
+P049,Road Expansion Project 049,Infrastructure,Pennsylvania,02/07/2024,11/08/2024,Completed,Medium,2237,2.27,1
+P049,Road Expansion Project 049,Infrastructure,Texas,02/07/2024,13/08/2024,Completed,Low,8742,1.32,1
+P049,Road Expansion Project 049,Infrastructure,New York,02/07/2024,23/08/2024,Completed,Medium,2613,0.41,0
+P050,Bridge Maintenance Project 050,Maintenance,Illinois,12/06/2024,22/07/2024,On Track,High,9467,0.67,1
+P050,Bridge Maintenance Project 050,Maintenance,Virginia,12/06/2024,25/07/2024,On Track,High,1380,1.7,1
+P050,Bridge Maintenance Project 050,Maintenance,Pennsylvania,12/06/2024,31/07/2024,On Track,High,1169,0.79,0
+P051,Office Building Renovation Project 051,Renovation,Ohio,23/03/2024,12/12/2024,Behind,Low,7063,7.54,5
+P051,Office Building Renovation Project 051,Renovation,Virginia,23/03/2024,25/09/2024,Behind,High,3221,4.95,5
+P051,Office Building Renovation Project 051,Renovation,Florida,23/03/2024,21/10/2024,Behind,High,1201,6.08,5
+P052,Apartment Complex Development Project 052,Other,Virginia,27/05/2024,27/07/2025,On Hold,Low,8114,1.83,2
+P052,Apartment Complex Development Project 052,Other,Ohio,27/05/2024,11/06/2025,On Hold,Low,7222,2.92,0
+P052,Apartment Complex Development Project 052,Other,Illinois,27/05/2024,22/08/2025,On Hold,High,2022,3.61,0
+P053,Commercial Center Construction Project 053,Construction,Texas,18/06/2024,27/11/2024,On Track,Low,9700,0.97,0
+P053,Commercial Center Construction Project 053,Construction,New Jersey,18/06/2024,21/10/2024,On Track,High,7624,0.58,0
+P053,Commercial Center Construction Project 053,Construction,Ohio,18/06/2024,07/11/2024,On Track,High,9072,2.13,1
+P054,Highway Reconstruction Project 054,Other,New Jersey,15/04/2024,26/12/2024,Behind,High,6793,4.58,5
+P054,Highway Reconstruction Project 054,Other,California,15/04/2024,06/03/2025,Behind,High,2398,7.95,4
+P054,Highway Reconstruction Project 054,Other,New York,15/04/2024,29/04/2025,Behind,Low,9449,3.38,3
+P055,Airport Expansion Project 055,Other,Virginia,28/08/2024,21/04/2025,On Hold,High,8386,1.32,0
+P055,Airport Expansion Project 055,Other,Illinois,28/08/2024,28/08/2025,On Hold,High,4294,3.56,0
+P055,Airport Expansion Project 055,Other,Michigan,28/08/2024,05/09/2025,On Hold,High,8340,1.7,0
+P056,Shopping Mall Renovation Project 056,Renovation,Pennsylvania,15/08/2024,25/09/2024,Completed,High,3548,2.46,1
+P056,Shopping Mall Renovation Project 056,Renovation,California,15/08/2024,02/11/2024,Completed,Low,9545,0.51,1
+P056,Shopping Mall Renovation Project 056,Renovation,Florida,15/08/2024,04/11/2024,Completed,High,1449,2.44,1
+P057,University Dormitory Construction Project 057,Construction,North Carolina,23/03/2024,15/06/2025,On Track,Medium,9728,1.43,0
+P057,University Dormitory Construction Project 057,Construction,New York,23/03/2024,25/04/2024,On Track,High,6762,1.31,1
+P057,University Dormitory Construction Project 057,Construction,California,23/03/2024,29/12/2024,On Track,Low,4093,1.36,1
+P058,Sports Stadium Upgrade Project 058,Other,New Jersey,24/07/2024,26/08/2024,On Hold,High,9027,1.15,0
+P058,Sports Stadium Upgrade Project 058,Other,Georgia,24/07/2024,04/09/2025,On Hold,Low,4949,2.76,0
+P058,Sports Stadium Upgrade Project 058,Other,Georgia,24/07/2024,06/07/2025,On Hold,Low,1671,3.86,0
+P059,Public Library Renovation Project 059,Renovation,North Carolina,08/02/2024,31/08/2024,On Hold,High,1634,2.93,1
+P059,Public Library Renovation Project 059,Renovation,Pennsylvania,08/02/2024,24/07/2024,On Hold,High,9178,3.31,0
+P059,Public Library Renovation Project 059,Renovation,Ohio,08/02/2024,13/07/2024,On Hold,High,5369,2.74,2
+P060,Building a Park Project 060,Other,Georgia,04/07/2024,16/11/2024,On Hold,Medium,4383,1.15,0
+P060,Building a Park Project 060,Other,Texas,04/07/2024,25/09/2024,On Hold,High,9106,2.41,0
+P060,Building a Park Project 060,Other,Washington,04/07/2024,26/10/2024,On Hold,High,7376,1.91,1
+P061,Renovation of a School Project 061,Renovation,Georgia,14/06/2024,05/05/2025,On Hold,Low,4564,1.48,1
+P061,Renovation of a School Project 061,Renovation,New Jersey,14/06/2024,21/05/2025,On Hold,Medium,6685,1.22,0
+P061,Renovation of a School Project 061,Renovation,New Jersey,14/06/2024,07/09/2025,On Hold,Medium,3548,2.31,0
+P062,Innovation of a Classroom Project 062,Innovation,Washington,27/07/2024,24/03/2025,On Hold,High,5997,3.43,2
+P062,Innovation of a Classroom Project 062,Innovation,New York,27/07/2024,25/09/2024,On Hold,High,3180,2.6,2
+P062,Innovation of a Classroom Project 062,Innovation,New York,27/07/2024,22/02/2025,On Hold,High,2178,2.98,0
+P063,Construction of a Hospital Wing Project 063,Construction,Pennsylvania,16/07/2024,07/01/2025,On Track,High,2944,1.48,0
+P063,Construction of a Hospital Wing Project 063,Construction,California,16/07/2024,18/08/2024,On Track,High,7376,1.89,0
+P063,Construction of a Hospital Wing Project 063,Construction,Florida,16/07/2024,11/04/2025,On Track,Low,6433,0.76,1
+P064,Road Expansion Project 064,Infrastructure,Texas,22/06/2024,25/09/2024,Behind,Low,5551,4.13,4
+P064,Road Expansion Project 064,Infrastructure,Illinois,22/06/2024,25/07/2024,Behind,Medium,9127,6.47,2
+P064,Road Expansion Project 064,Infrastructure,Virginia,22/06/2024,25/09/2024,Behind,High,9168,5.36,3
+P065,Bridge Maintenance Project 065,Maintenance,New York,06/01/2024,08/02/2024,On Track,High,2284,2.12,1
+P065,Bridge Maintenance Project 065,Maintenance,Florida,06/01/2024,25/10/2024,On Track,Medium,4973,2.25,0
+P065,Bridge Maintenance Project 065,Maintenance,North Carolina,06/01/2024,30/09/2024,On Track,High,7992,0.49,0
+P066,Office Building Renovation Project 066,Renovation,Georgia,04/05/2024,23/11/2024,Completed,High,3669,0.22,0
+P066,Office Building Renovation Project 066,Renovation,Georgia,04/05/2024,06/11/2024,Completed,High,6395,1.07,0
+P066,Office Building Renovation Project 066,Renovation,North Carolina,04/05/2024,13/09/2024,Completed,Medium,4445,1.61,0
+P067,Apartment Complex Development Project 067,Other,Washington,30/01/2024,12/01/2025,Completed,Low,1599,2.5,1
+P067,Apartment Complex Development Project 067,Other,Texas,30/01/2024,26/12/2024,Completed,Medium,9597,0.56,1
+P067,Apartment Complex Development Project 067,Other,New York,30/01/2024,03/03/2024,Completed,High,2143,1.47,0
+P068,Commercial Center Construction Project 068,Construction,New York,30/01/2024,28/05/2025,Behind,Low,6658,6.64,3
+P068,Commercial Center Construction Project 068,Construction,Illinois,30/01/2024,13/02/2025,Behind,Low,8758,4.84,5
+P068,Commercial Center Construction Project 068,Construction,California,30/01/2024,03/03/2024,Behind,High,9806,5.94,5
+P069,Highway Reconstruction Project 069,Other,Washington,25/02/2024,01/03/2025,On Track,High,3424,2.16,1
+P069,Highway Reconstruction Project 069,Other,North Carolina,25/02/2024,14/08/2025,On Track,High,8166,2.01,1
+P069,Highway Reconstruction Project 069,Other,North Carolina,25/02/2024,08/08/2025,On Track,Low,9968,1.62,1
+P070,Airport Expansion Project 070,Other,California,28/02/2024,23/06/2025,Behind,High,9313,7.41,4
+P070,Airport Expansion Project 070,Other,Michigan,28/02/2024,27/09/2025,Behind,High,4494,7.44,2
+P070,Airport Expansion Project 070,Other,Florida,28/02/2024,01/04/2024,Behind,High,7738,7.13,2
+P071,Shopping Mall Renovation Project 071,Renovation,Virginia,10/02/2024,18/02/2024,On Track,High,8568,1.02,0
+P071,Shopping Mall Renovation Project 071,Renovation,Texas,10/02/2024,19/02/2024,On Track,High,1052,0.61,1
+P071,Shopping Mall Renovation Project 071,Renovation,Pennsylvania,10/02/2024,17/02/2024,On Track,High,7325,0.74,1
+P072,University Dormitory Construction Project 072,Construction,Ohio,23/04/2024,27/05/2025,On Hold,High,7862,1.93,2
+P072,University Dormitory Construction Project 072,Construction,Georgia,23/04/2024,26/05/2024,On Hold,High,7708,2.79,1
+P072,University Dormitory Construction Project 072,Construction,New Jersey,23/04/2024,09/06/2025,On Hold,Medium,3260,2.11,1
+P073,Sports Stadium Upgrade Project 073,Other,Texas,06/05/2024,23/09/2024,Behind,Low,1702,5.38,3
+P073,Sports Stadium Upgrade Project 073,Other,Virginia,06/05/2024,22/08/2024,Behind,High,8403,5.56,2
+P073,Sports Stadium Upgrade Project 073,Other,Texas,06/05/2024,14/09/2024,Behind,High,4955,7.05,5
+P074,Public Library Renovation Project 074,Renovation,New York,21/05/2024,26/07/2024,Behind,High,3533,6.44,5
+P074,Public Library Renovation Project 074,Renovation,Washington,21/05/2024,01/08/2024,Behind,High,8279,6.09,2
+P074,Public Library Renovation Project 074,Renovation,Texas,21/05/2024,17/07/2024,Behind,High,3680,7.2,3
+P075,Building a Park Project 075,Other,Texas,11/05/2024,13/06/2024,Behind,Medium,8493,7.7,2
+P075,Building a Park Project 075,Other,Washington,11/05/2024,12/09/2025,Behind,Medium,3828,3.15,2
+P075,Building a Park Project 075,Other,Virginia,11/05/2024,26/07/2025,Behind,Medium,6118,5.28,5
+P076,Renovation of a School Project 076,Renovation,Michigan,11/07/2024,01/08/2024,On Track,High,6558,0.66,0
+P076,Renovation of a School Project 076,Renovation,New York,11/07/2024,11/08/2024,On Track,Medium,1044,1.26,1
+P076,Renovation of a School Project 076,Renovation,Ohio,11/07/2024,01/08/2024,On Track,High,7397,2.38,1
+P077,Innovation of a Classroom Project 077,Innovation,California,09/04/2024,07/02/2025,On Hold,Medium,8832,3.66,1
+P077,Innovation of a Classroom Project 077,Innovation,Virginia,09/04/2024,12/05/2024,On Hold,High,3123,1.62,2
+P077,Innovation of a Classroom Project 077,Innovation,Florida,09/04/2024,13/03/2025,On Hold,Low,6854,3.78,0
+P078,Construction of a Hospital Wing Project 078,Construction,Michigan,26/01/2024,19/04/2024,On Hold,High,8429,1.72,0
+P078,Construction of a Hospital Wing Project 078,Construction,New Jersey,26/01/2024,18/03/2024,On Hold,High,1501,2.31,1
+P078,Construction of a Hospital Wing Project 078,Construction,Pennsylvania,26/01/2024,09/04/2024,On Hold,Medium,8487,2.97,0
+P079,Road Expansion Project 079,Infrastructure,California,22/04/2024,13/01/2025,Completed,High,6425,1.32,0
+P079,Road Expansion Project 079,Infrastructure,Florida,22/04/2024,15/03/2025,Completed,High,8044,2.4,0
+P079,Road Expansion Project 079,Infrastructure,New York,22/04/2024,25/05/2024,Completed,Medium,9524,2.2,1
+P080,Bridge Maintenance Project 080,Maintenance,Ohio,16/04/2024,09/07/2024,On Track,High,4368,1.36,0
+P080,Bridge Maintenance Project 080,Maintenance,New Jersey,16/04/2024,23/06/2024,On Track,Low,2261,1.75,0
+P080,Bridge Maintenance Project 080,Maintenance,Texas,16/04/2024,06/07/2024,On Track,Medium,8706,1.52,0
+P081,Office Building Renovation Project 081,Renovation,Pennsylvania,31/05/2024,04/01/2025,On Track,High,1149,0.36,1
+P081,Office Building Renovation Project 081,Renovation,Virginia,31/05/2024,03/03/2025,On Track,Medium,5011,1.86,1
+P081,Office Building Renovation Project 081,Renovation,North Carolina,31/05/2024,03/07/2024,On Track,High,6163,1.33,1
+P082,Apartment Complex Development Project 082,Other,Ohio,01/07/2024,12/03/2025,On Track,Medium,7524,1.44,1
+P082,Apartment Complex Development Project 082,Other,Florida,01/07/2024,25/09/2024,On Track,Medium,2202,0.39,0
+P082,Apartment Complex Development Project 082,Other,Pennsylvania,01/07/2024,17/03/2025,On Track,High,6835,2.43,1
+P083,Commercial Center Construction Project 083,Construction,Michigan,20/03/2024,05/06/2024,Behind,Medium,8645,4.17,4
+P083,Commercial Center Construction Project 083,Construction,New York,20/03/2024,25/05/2024,Behind,High,9360,5.81,2
+P083,Commercial Center Construction Project 083,Construction,Georgia,20/03/2024,15/06/2024,Behind,High,2183,7.81,2
+P084,Highway Reconstruction Project 084,Other,Georgia,09/06/2024,08/05/2025,On Hold,Low,1713,3.96,0
+P084,Highway Reconstruction Project 084,Other,North Carolina,09/06/2024,19/04/2025,On Hold,Medium,6400,1.65,2
+P084,Highway Reconstruction Project 084,Other,North Carolina,09/06/2024,25/03/2025,On Hold,High,3319,1.01,0
+P085,Airport Expansion Project 085,Other,Virginia,03/08/2024,18/11/2024,Completed,Low,8340,1.56,1
+P085,Airport Expansion Project 085,Other,Illinois,03/08/2024,25/09/2024,Completed,High,4749,2.39,1
+P085,Airport Expansion Project 085,Other,New Jersey,03/08/2024,19/11/2024,Completed,High,6222,1.79,0
+P086,Shopping Mall Renovation Project 086,Renovation,Pennsylvania,29/01/2024,10/12/2024,Completed,High,9246,1.69,1
+P086,Shopping Mall Renovation Project 086,Renovation,Pennsylvania,29/01/2024,25/09/2024,Completed,High,7327,1.85,1
+P086,Shopping Mall Renovation Project 086,Renovation,Virginia,29/01/2024,17/10/2024,Completed,High,6331,2.06,1
+P087,University Dormitory Construction Project 087,Construction,California,17/02/2024,11/09/2025,On Track,High,2256,1.24,1
+P087,University Dormitory Construction Project 087,Construction,New York,17/02/2024,07/10/2025,On Track,Medium,5371,0.73,0
+P087,University Dormitory Construction Project 087,Construction,North Carolina,17/02/2024,06/10/2025,On Track,High,2434,0.92,0
+P088,Sports Stadium Upgrade Project 088,Other,Georgia,21/07/2024,13/02/2025,Completed,High,7504,2.48,0
+P088,Sports Stadium Upgrade Project 088,Other,Virginia,21/07/2024,02/02/2025,Completed,Medium,7717,2.27,0
+P088,Sports Stadium Upgrade Project 088,Other,Washington,21/07/2024,21/12/2024,Completed,High,4651,2.16,0
+P089,Public Library Renovation Project 089,Renovation,Georgia,26/05/2024,06/05/2025,On Track,Medium,5791,1.9,0
+P089,Public Library Renovation Project 089,Renovation,Washington,26/05/2024,18/07/2025,On Track,High,4133,0.53,1
+P089,Public Library Renovation Project 089,Renovation,Washington,26/05/2024,28/06/2024,On Track,Medium,8716,0.97,1
+P090,Building a Park Project 090,Other,Michigan,11/06/2024,14/07/2024,Completed,High,9174,0.37,1
+P090,Building a Park Project 090,Other,North Carolina,11/06/2024,01/09/2025,Completed,Low,9702,1.51,1
+P090,Building a Park Project 090,Other,Georgia,11/06/2024,21/10/2025,Completed,High,8975,2.38,1
+P091,Renovation of a School Project 091,Renovation,Michigan,22/05/2024,24/06/2024,On Hold,High,7491,3.59,1
+P091,Renovation of a School Project 091,Renovation,Michigan,22/05/2024,13/03/2025,On Hold,Medium,4013,1.94,1
+P091,Renovation of a School Project 091,Renovation,New York,22/05/2024,21/03/2025,On Hold,Low,1670,2.82,2
+P092,Innovation of a Classroom Project 092,Innovation,California,03/03/2024,26/11/2024,Completed,Medium,6004,1.5,1
+P092,Innovation of a Classroom Project 092,Innovation,Illinois,03/03/2024,25/09/2024,Completed,Medium,9649,2.08,1
+P092,Innovation of a Classroom Project 092,Innovation,Georgia,03/03/2024,25/09/2024,Completed,High,5921,1.16,0
+P093,Construction of a Hospital Wing Project 093,Construction,Virginia,19/08/2024,21/09/2024,Completed,Low,4306,1.09,0
+P093,Construction of a Hospital Wing Project 093,Construction,Illinois,19/08/2024,19/04/2025,Completed,Low,8367,1.85,1
+P093,Construction of a Hospital Wing Project 093,Construction,Georgia,19/08/2024,21/09/2024,Completed,Low,4178,2.03,1
+P094,Road Expansion Project 094,Infrastructure,North Carolina,28/06/2024,06/10/2024,Behind,High,1773,3.81,3
+P094,Road Expansion Project 094,Infrastructure,Illinois,28/06/2024,29/09/2024,Behind,High,7829,6.82,2
+P094,Road Expansion Project 094,Infrastructure,Virginia,28/06/2024,23/09/2024,Behind,Medium,1447,5.28,2
+P095,Bridge Maintenance Project 095,Maintenance,Ohio,17/02/2024,02/08/2024,Behind,Medium,8329,5.47,3
+P095,Bridge Maintenance Project 095,Maintenance,Illinois,17/02/2024,29/06/2024,Behind,Low,6160,3.74,5
+P095,Bridge Maintenance Project 095,Maintenance,New Jersey,17/02/2024,27/07/2024,Behind,High,6083,6.44,4
+P096,Office Building Renovation Project 096,Renovation,Georgia,03/03/2024,06/05/2025,On Track,Low,1235,1.75,1
+P096,Office Building Renovation Project 096,Renovation,Illinois,03/03/2024,05/01/2025,On Track,Medium,2984,0.37,0
+P096,Office Building Renovation Project 096,Renovation,Ohio,03/03/2024,09/03/2025,On Track,High,5211,0.7,1
+P097,Apartment Complex Development Project 097,Other,Washington,08/06/2024,08/12/2024,Behind,High,6292,4.63,4
+P097,Apartment Complex Development Project 097,Other,Florida,08/06/2024,08/03/2025,Behind,Medium,2335,5.62,2
+P097,Apartment Complex Development Project 097,Other,Virginia,08/06/2024,21/12/2024,Behind,High,3956,4.06,2
+P098,Commercial Center Construction Project 098,Construction,Illinois,15/08/2024,23/01/2025,Completed,Medium,8906,0.88,0
+P098,Commercial Center Construction Project 098,Construction,Texas,15/08/2024,28/01/2025,Completed,Medium,8346,0.41,1
+P098,Commercial Center Construction Project 098,Construction,Michigan,15/08/2024,27/04/2025,Completed,High,5134,0.2,1
+P099,Highway Reconstruction Project 099,Other,New Jersey,31/05/2024,22/12/2024,Completed,Medium,7307,1.81,0
+P099,Highway Reconstruction Project 099,Other,New York,31/05/2024,01/03/2025,Completed,High,9425,1.87,1
+P099,Highway Reconstruction Project 099,Other,Florida,31/05/2024,11/03/2025,Completed,High,5199,0.13,1
+P100,Airport Expansion Project 100,Other,Virginia,08/08/2024,02/09/2024,On Track,Medium,2156,0.15,0
+P100,Airport Expansion Project 100,Other,Pennsylvania,08/08/2024,30/08/2024,On Track,Medium,1502,1.13,0
+P100,Airport Expansion Project 100,Other,Virginia,08/08/2024,30/08/2024,On Track,Medium,8619,2.36,0

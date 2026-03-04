@@ -1,0 +1,9 @@
+Assigned To,Resource_Role,Resource_ID,Availability_Hours_Per_Week
+Bob,Developer,R001,20
+Charlie,Developer,R002,20
+Alice,Project Manager,R003,20
+Grace,Designer,R004,20
+Frank,Designer,R005,40
+Ivy,QA Engineer,R006,30
+Eve,Designer,R007,30
+David,DevOps,R008,30
