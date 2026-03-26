@@ -1,0 +1,16 @@
+{
+  "name": "project-jj",
+  "private": true,
+  "packageManager": "npm@10.0.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev start:dev",
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}

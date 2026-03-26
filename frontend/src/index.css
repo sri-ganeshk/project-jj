@@ -1,0 +1,57 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@theme {
+  --color-background: #11131c;
+  --color-surface: #191b24;
+  --color-surfaceHigh: #32343e;
+  --color-surfaceHighest: #3f414d;
+  --color-primary: #cdbdff;
+  --color-primaryContainer: #5d21df;
+  --color-tertiaryContainer: #6c37a9;
+  --color-outlineVariant: #494456;
+  --color-error: #ffb4ab;
+  --color-errorContainer: #93000a;
+  
+  --font-sans: "Inter", "sans-serif";
+}
+
+@layer base {
+  body {
+    @apply bg-background text-[#e1e1ef] font-sans antialiased min-h-screen;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  /* No-line rule, using tonal backgrounds */
+  .surface-card {
+    @apply bg-surface rounded-lg p-6 transition-colors duration-300;
+  }
+  
+  .surface-card:hover {
+    @apply bg-surfaceHigh;
+  }
+  
+  /* AI Insights glass effect */
+  .ai-glass {
+    @apply bg-surface/40 backdrop-blur-md border border-outlineVariant/20 rounded-lg p-6;
+  }
+  
+  .ghost-border {
+    @apply border border-outlineVariant/20;
+  }
+  
+  /* Primary Action Gradient */
+  .btn-primary {
+    @apply bg-gradient-to-br from-primaryContainer to-tertiaryContainer text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:shadow-primaryContainer/30 transition-all duration-300 border-none outline-none;
+  }
+
+  /* Secondary Action */
+  .btn-secondary {
+    @apply bg-surfaceHigh text-primary font-medium py-2 px-4 rounded-lg hover:bg-surface/80 transition-all border border-outlineVariant/20;
+  }
+}
