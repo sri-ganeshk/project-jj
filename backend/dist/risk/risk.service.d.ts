@@ -13,4 +13,24 @@ export declare class RiskService {
             mitigationSuggestion: string;
         }>;
     }>;
+    findAll(): Promise<{
+        id: string;
+        projectId: string;
+        riskType: string;
+        riskScore: number;
+        severity: string;
+        affectedArea: string;
+        mitigationSuggestion: string;
+        predictedAt: Date;
+    }[]>;
+    findByProject(projectId: string): Promise<{
+        id: string;
+        projectId: string;
+        riskType: string;
+        riskScore: number;
+        severity: string;
+        affectedArea: string;
+        mitigationSuggestion: string;
+        predictedAt: Date;
+    }[]>;
 }

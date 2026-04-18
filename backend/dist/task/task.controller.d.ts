@@ -5,42 +5,42 @@ export declare class TaskController {
     private readonly taskService;
     constructor(taskService: TaskService);
     create(createTaskDto: CreateTaskDto): Promise<{
-        id: string;
         status: string;
+        id: string;
+        projectId: string;
         title: string;
         priority: string;
         estimatedHours: number;
         actualHours: number;
         dueDate: Date;
-        complexityScore: number;
-        projectId: string;
         assignedTo: string | null;
+        complexityScore: number;
     }>;
     findAll(): Promise<({
         resource: {
-            id: string;
             name: string;
+            id: string;
             projectId: string;
             role: string;
             availabilityHours: number;
             skillSet: string;
         } | null;
     } & {
-        id: string;
         status: string;
+        id: string;
+        projectId: string;
         title: string;
         priority: string;
         estimatedHours: number;
         actualHours: number;
         dueDate: Date;
-        complexityScore: number;
-        projectId: string;
         assignedTo: string | null;
+        complexityScore: number;
     })[]>;
     findOne(id: string): Promise<{
         resource: {
-            id: string;
             name: string;
+            id: string;
             projectId: string;
             role: string;
             availabilityHours: number;
@@ -67,39 +67,39 @@ export declare class TaskController {
             changedBy: string;
         }[];
     } & {
-        id: string;
         status: string;
+        id: string;
+        projectId: string;
         title: string;
         priority: string;
         estimatedHours: number;
         actualHours: number;
         dueDate: Date;
-        complexityScore: number;
-        projectId: string;
         assignedTo: string | null;
+        complexityScore: number;
     }>;
     update(id: string, updateTaskDto: UpdateTaskDto): Promise<{
-        id: string;
         status: string;
+        id: string;
+        projectId: string;
         title: string;
         priority: string;
         estimatedHours: number;
         actualHours: number;
         dueDate: Date;
-        complexityScore: number;
-        projectId: string;
         assignedTo: string | null;
+        complexityScore: number;
     }>;
     remove(id: string): Promise<{
-        id: string;
         status: string;
+        id: string;
+        projectId: string;
         title: string;
         priority: string;
         estimatedHours: number;
         actualHours: number;
         dueDate: Date;
-        complexityScore: number;
-        projectId: string;
         assignedTo: string | null;
+        complexityScore: number;
     }>;
 }

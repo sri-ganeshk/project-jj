@@ -11,4 +11,24 @@ export declare class RiskController {
             mitigationSuggestion: string;
         }[] | undefined;
     }>;
+    findAll(): Promise<{
+        id: string;
+        projectId: string;
+        riskType: string;
+        riskScore: number;
+        severity: string;
+        affectedArea: string;
+        mitigationSuggestion: string;
+        predictedAt: Date;
+    }[]>;
+    findByProject(projectId: string): Promise<{
+        id: string;
+        projectId: string;
+        riskType: string;
+        riskScore: number;
+        severity: string;
+        affectedArea: string;
+        mitigationSuggestion: string;
+        predictedAt: Date;
+    }[]>;
 }

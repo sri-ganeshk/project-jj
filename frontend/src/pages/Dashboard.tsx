@@ -1,115 +1,321 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import api from '../api';
-import { Activity, Layout, AlertTriangle, Sparkles } from 'lucide-react';
+import { Activity, Layout, AlertTriangle, Sparkles, RefreshCw, FileText, Zap } from 'lucide-react';
+import type { Project, RiskPrediction } from '../types';
+import Modal from '../components/Modal';
+
+// ── Severity colour map ──────────────────────────────────
+const severityStyle: Record<string, { pill: string; dot: string }> = {
+  Low:      { pill: 'bg-[#10b981]/20 text-[#10b981]', dot: 'bg-[#10b981]' },
+  Medium:   { pill: 'bg-[#4635a7]/60 text-[#c7bfff]', dot: 'bg-[#c7bfff]' },
+  High:     { pill: 'bg-errorContainer text-error',   dot: 'bg-error' },
+  Critical: { pill: 'bg-error text-white',             dot: 'bg-red-300' },
+};
+
+// ── KPI Card ────────────────────────────────────────────
+function KpiCard({ label, value, sub, icon: Icon, accent }: {
+  label: string; value: string | number; sub?: string;
+  icon: React.ElementType; accent: string;
+}) {
+  return (
+    <div className={`surface-card flex items-center justify-between border-t-2 ${accent}`}>
+      <div>
+        <p className="text-[#cbc3d9] text-xs uppercase tracking-widest font-semibold">{label}</p>
+        <h2 className="text-4xl font-bold mt-2 tracking-tight">{value}</h2>
+        {sub && <p className="text-xs text-[#cbc3d9] mt-1">{sub}</p>}
+      </div>
+      <div className={`p-3 bg-surfaceHighest rounded-2xl`}>
+        <Icon className="w-8 h-8" style={{ color: accent.replace('border-', '') }} />
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ projects: 0, tasks: 0 });
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<{ id: string; status: string }[]>([]);
+  const [risks, setRisks] = useState<RiskPrediction[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Attempting to fetch from backend
-    api.get('/projects').then(res => setStats(s => ({ ...s, projects: res.data.length }))).catch(console.error);
-    api.get('/tasks').then(res => setStats(s => ({ ...s, tasks: res.data.length }))).catch(console.error);
+  // AI action state
+  const [showReportModal, setShowReportModal]   = useState(false);
+  const [showOptimizeModal, setShowOptimizeModal] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+  const [aiRunning, setAiRunning] = useState(false);
+  const [aiResult, setAiResult] = useState<string | null>(null);
+
+  const loadAll = useCallback(() => {
+    setLoading(true);
+    Promise.all([
+      api.get('/projects'),
+      api.get('/tasks'),
+      api.get('/risk').catch(() => ({ data: [] })),
+    ])
+      .then(([p, t, r]) => {
+        setProjects(p.data);
+        setTasks(t.data);
+        setRisks(r.data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  const handleRunReport = async () => {
-    const pId = prompt('Enter Project ID to generate AI Report for: (e.g., 1)');
-    if (!pId) return;
+  useEffect(() => { loadAll(); }, [loadAll]);
+
+  // ── Computed stats ────────────────────────────────────
+  const totalProjects  = projects.length;
+  const activeTasks    = tasks.filter((t) => t.status !== 'Done').length;
+  const avgRisk        = risks.length
+    ? (risks.reduce((s, r) => s + r.riskScore, 0) / risks.length).toFixed(2)
+    : '—';
+  const highRisks = risks.filter((r) => r.severity === 'High' || r.severity === 'Critical');
+
+  // ── Run AI Report ──────────────────────────────────────
+  const runReport = async () => {
+    if (!selectedProjectId) return;
+    setAiRunning(true);
+    setAiResult(null);
     try {
-      alert('Generating Executive Report...');
-      await api.get(`/report/generate/${pId}`);
-      alert('Report generated successfully!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to generate report.');
+      const res = await api.get(`/report/generate/${selectedProjectId}`);
+      setAiResult(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
+    } catch (err: any) {
+      setAiResult(`Error: ${err?.response?.data?.message ?? err.message}`);
+    } finally {
+      setAiRunning(false);
     }
   };
 
-  const handleOptimize = async () => {
-    const pId = prompt('Enter Project ID to run AI Optimizer on: (e.g., 1)');
-    if (!pId) return;
+  // ── Run AI Optimizer ───────────────────────────────────
+  const runOptimize = async () => {
+    if (!selectedProjectId) return;
+    setAiRunning(true);
+    setAiResult(null);
     try {
-      alert('Running AI Scheduler...');
-      await api.post(`/scheduler/optimize/${pId}`);
-      alert('Schedule Optimized successfully!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to optimize schedule.');
+      const res = await api.post(`/scheduler/optimize/${selectedProjectId}`);
+      setAiResult(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
+    } catch (err: any) {
+      setAiResult(`Error: ${err?.response?.data?.message ?? err.message}`);
+    } finally {
+      setAiRunning(false);
     }
+  };
+
+  // ── Open AI modal helper ───────────────────────────────
+  const openAiModal = (type: 'report' | 'optimize') => {
+    setSelectedProjectId(projects[0]?.id ?? '');
+    setAiResult(null);
+    if (type === 'report')   setShowReportModal(true);
+    if (type === 'optimize') setShowOptimizeModal(true);
   };
 
   return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-[#cbc3d9] mt-2">Welcome to your intelligence command center.</p>
+    <div className="space-y-8 p-8">
+      {/* Header */}
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-[#cbc3d9] mt-1">Your AI-powered project intelligence center.</p>
+        </div>
+        <button
+          onClick={loadAll}
+          disabled={loading}
+          className="btn-secondary flex items-center gap-2 px-4 py-2"
+          id="dashboard-refresh-btn"
+          title="Refresh all data"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </header>
 
+      {/* KPI Cards */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="surface-card flex items-center justify-between border-t-2 border-primaryContainer">
-          <div>
-            <p className="text-[#cbc3d9] text-sm uppercase tracking-wider font-semibold">Total Projects</p>
-            <h2 className="text-4xl font-bold mt-2">{stats.projects || 12}</h2>
+        <KpiCard
+          label="Total Projects"
+          value={loading ? '…' : totalProjects}
+          sub={`${projects.filter(p => p.status === 'Active').length} active`}
+          icon={Layout}
+          accent="border-primaryContainer"
+        />
+        <KpiCard
+          label="Active Tasks"
+          value={loading ? '…' : activeTasks}
+          sub={`${tasks.filter(t => t.status === 'Done').length} completed`}
+          icon={Activity}
+          accent="border-[#10b981]"
+        />
+        <KpiCard
+          label="Avg Risk Score"
+          value={loading ? '…' : avgRisk}
+          sub={`${highRisks.length} high / critical findings`}
+          icon={AlertTriangle}
+          accent="border-[#ffb4ab]"
+        />
+      </section>
+
+      {/* AI Panel + Risk Alerts */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        {/* AI Insights */}
+        <div className="ai-glass flex flex-col gap-4 pulse-glow">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary" />
+            AI Insights &amp; Actions
+          </h3>
+          <p className="text-sm text-[#cbc3d9]">
+            Select a project and let the AI engine run risk predictions, schedule optimization, or generate executive reports.
+          </p>
+          <div className="flex flex-col gap-3 mt-auto">
+            <button
+              id="run-report-btn"
+              onClick={() => openAiModal('report')}
+              disabled={projects.length === 0}
+              className="btn-primary flex items-center justify-center gap-2 py-3.5 text-base"
+            >
+              <FileText className="w-5 h-5" /> Generate AI Executive Report
+            </button>
+            <button
+              id="run-optimize-btn"
+              onClick={() => openAiModal('optimize')}
+              disabled={projects.length === 0}
+              className="btn-secondary flex items-center justify-center gap-2 py-3.5 text-base"
+            >
+              <Zap className="w-5 h-5" /> Run AI Schedule Optimizer
+            </button>
           </div>
-          <div className="p-3 bg-surfaceHighest rounded-2xl text-primary">
-            <Layout className="w-8 h-8" />
-          </div>
+          {projects.length === 0 && !loading && (
+            <p className="text-xs text-[#cbc3d9] text-center mt-2">Create a project first to enable AI actions.</p>
+          )}
         </div>
-        <div className="surface-card flex items-center justify-between border-t-2 border-[#10b981]">
-          <div>
-            <p className="text-[#cbc3d9] text-sm uppercase tracking-wider font-semibold">Active Tasks</p>
-            <h2 className="text-4xl font-bold mt-2">{stats.tasks || 45}</h2>
-          </div>
-          <div className="p-3 bg-surfaceHighest rounded-2xl text-[#10b981]">
-            <Activity className="w-8 h-8" />
-          </div>
-        </div>
-        <div className="surface-card flex items-center justify-between border-t-2 border-[#ffb4ab]">
-          <div>
-            <p className="text-[#cbc3d9] text-sm uppercase tracking-wider font-semibold">Avg Risk Score</p>
-            <h2 className="text-4xl font-bold mt-2">2.4 <span className="text-lg text-[#cbc3d9]">/ 5</span></h2>
-          </div>
-          <div className="p-3 bg-surfaceHighest rounded-2xl text-[#ffb4ab]">
-            <AlertTriangle className="w-8 h-8" />
-          </div>
+
+        {/* At-Risk Alerts */}
+        <div className="surface-card ghost-border">
+          <h3 className="text-xl font-semibold mb-5 flex items-center justify-between">
+            At-Risk Alerts
+            <span className="text-sm font-normal text-[#cbc3d9]">{highRisks.length} active</span>
+          </h3>
+
+          {loading ? (
+            <p className="text-[#cbc3d9] text-sm animate-pulse">Loading risk data…</p>
+          ) : highRisks.length > 0 ? (
+            <ul className="space-y-3">
+              {highRisks.slice(0, 5).map((r) => {
+                const style = severityStyle[r.severity] ?? severityStyle.Medium;
+                const project = projects.find((p) => p.id === r.projectId);
+                return (
+                  <li
+                    key={r.id}
+                    className="flex items-center justify-between p-4 rounded-xl bg-surfaceHighest/40 hover:bg-surfaceHigh transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${style.dot}`} />
+                      <div>
+                        <span className="block font-medium text-sm">{r.riskType}</span>
+                        <span className="text-xs text-[#cbc3d9]">
+                          {project?.name ?? 'Unknown project'} · {r.affectedArea}
+                        </span>
+                      </div>
+                    </div>
+                    <span className={`badge ${style.pill} ml-3 flex-shrink-0`}>{r.severity}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : risks.length > 0 ? (
+            <p className="text-[#10b981] text-sm">✓ No high-risk findings at this time.</p>
+          ) : (
+            <p className="text-[#cbc3d9] text-sm">
+              No risk data yet. Run <strong className="text-primary">AI Risk Assessment</strong> on a project to populate this panel.
+            </p>
+          )}
         </div>
       </section>
 
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="ai-glass flex flex-col">
-          <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" />
-            AI Insights & Actions
-          </h3>
-          <div className="flex flex-col gap-4 mt-auto">
-            <button onClick={handleRunReport} className="btn-primary flex items-center justify-center gap-2 py-4 text-lg">
-               Generate AI Executive Report
+      {/* ── AI Report Modal ── */}
+      <Modal
+        open={showReportModal}
+        onClose={() => { setShowReportModal(false); setAiResult(null); }}
+        title="Generate AI Executive Report"
+        maxWidth="max-w-lg"
+        footer={
+          <>
+            <button onClick={() => setShowReportModal(false)} className="btn-secondary px-5">Close</button>
+            <button
+              id="run-report-confirm"
+              onClick={runReport}
+              disabled={!selectedProjectId || aiRunning}
+              className="btn-primary px-6 flex items-center gap-2"
+            >
+              {aiRunning ? <><RefreshCw className="w-4 h-4 animate-spin" /> Generating…</> : <><FileText className="w-4 h-4" /> Generate</>}
             </button>
-            <button onClick={handleOptimize} className="btn-secondary flex items-center justify-center gap-2 py-4 text-lg">
-               Run AI Schedule Optimizer
-            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="form-field">
+            <label htmlFor="report-project-select" className="form-label">Select Project</label>
+            <select
+              id="report-project-select"
+              className="form-select"
+              value={selectedProjectId}
+              onChange={(e) => setSelectedProjectId(e.target.value)}
+            >
+              {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
           </div>
+          {aiResult && (
+            <div className="mt-4 p-4 bg-surfaceHigh rounded-lg border border-outlineVariant/20">
+              <p className="text-xs text-[#cbc3d9] uppercase tracking-wider mb-2 font-semibold">Result</p>
+              <pre className="text-sm text-[#e1e1ef] whitespace-pre-wrap break-words max-h-60 overflow-y-auto">
+                {aiResult}
+              </pre>
+            </div>
+          )}
         </div>
-        
-        <div className="surface-card ghost-border">
-          <h3 className="text-xl font-semibold mb-6">At-Risk Alerts</h3>
-          <ul className="space-y-3">
-            <li className="flex justify-between items-center p-4 rounded-lg bg-[#32343e]/50 hover:bg-[#32343e] cursor-pointer transition-colors">
-              <div>
-                <span className="block font-medium">Supply Chain Delay</span>
-                <span className="text-xs text-[#cbc3d9]">Project: Alpha Upgrade</span>
-              </div>
-              <span className="px-3 py-1 bg-[#93000a] text-[#ffdad6] text-xs font-semibold rounded-full">High Risk</span>
-            </li>
-            <li className="flex justify-between items-center p-4 rounded-lg bg-[#32343e]/50 hover:bg-[#32343e] cursor-pointer transition-colors">
-              <div>
-                <span className="block font-medium">Resource Bottleneck</span>
-                <span className="text-xs text-[#cbc3d9]">Project: Beta Launch</span>
-              </div>
-              <span className="px-3 py-1 bg-[#4635a7] text-[#c7bfff] text-xs font-semibold rounded-full">Medium</span>
-            </li>
-          </ul>
+      </Modal>
+
+      {/* ── AI Optimizer Modal ── */}
+      <Modal
+        open={showOptimizeModal}
+        onClose={() => { setShowOptimizeModal(false); setAiResult(null); }}
+        title="Run AI Schedule Optimizer"
+        maxWidth="max-w-lg"
+        footer={
+          <>
+            <button onClick={() => setShowOptimizeModal(false)} className="btn-secondary px-5">Close</button>
+            <button
+              id="run-optimize-confirm"
+              onClick={runOptimize}
+              disabled={!selectedProjectId || aiRunning}
+              className="btn-primary px-6 flex items-center gap-2"
+            >
+              {aiRunning ? <><RefreshCw className="w-4 h-4 animate-spin" /> Optimizing…</> : <><Zap className="w-4 h-4" /> Optimize</>}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div className="form-field">
+            <label htmlFor="optimize-project-select" className="form-label">Select Project</label>
+            <select
+              id="optimize-project-select"
+              className="form-select"
+              value={selectedProjectId}
+              onChange={(e) => setSelectedProjectId(e.target.value)}
+            >
+              {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </div>
+          {aiResult && (
+            <div className="mt-4 p-4 bg-surfaceHigh rounded-lg border border-outlineVariant/20">
+              <p className="text-xs text-[#cbc3d9] uppercase tracking-wider mb-2 font-semibold">Optimization Result</p>
+              <pre className="text-sm text-[#e1e1ef] whitespace-pre-wrap break-words max-h-60 overflow-y-auto">
+                {aiResult}
+              </pre>
+            </div>
+          )}
         </div>
-      </section>
+      </Modal>
     </div>
   );
 }

@@ -5,69 +5,69 @@ export declare class ProjectController {
     private readonly projectService;
     constructor(projectService: ProjectService);
     create(createProjectDto: CreateProjectDto): Promise<{
-        id: string;
         name: string;
         startDate: Date;
         endDate: Date;
         status: string;
         budget: number;
+        id: string;
         createdAt: Date;
     }>;
     findAll(): Promise<{
-        id: string;
         name: string;
         startDate: Date;
         endDate: Date;
         status: string;
         budget: number;
+        id: string;
         createdAt: Date;
     }[]>;
     findOne(id: string): Promise<{
         tasks: {
-            id: string;
             status: string;
+            id: string;
+            projectId: string;
             title: string;
             priority: string;
             estimatedHours: number;
             actualHours: number;
             dueDate: Date;
-            complexityScore: number;
-            projectId: string;
             assignedTo: string | null;
+            complexityScore: number;
         }[];
         resources: {
-            id: string;
             name: string;
+            id: string;
             projectId: string;
             role: string;
             availabilityHours: number;
             skillSet: string;
         }[];
     } & {
-        id: string;
         name: string;
         startDate: Date;
         endDate: Date;
         status: string;
         budget: number;
+        id: string;
         createdAt: Date;
     }>;
     update(id: string, updateProjectDto: UpdateProjectDto): Promise<{
-        id: string;
         name: string;
         startDate: Date;
         endDate: Date;
         status: string;
         budget: number;
+        id: string;
         createdAt: Date;
     }>;
     remove(id: string): Promise<{
-        id: string;
         name: string;
         startDate: Date;
         endDate: Date;
         status: string;
         budget: number;
+        id: string;
         createdAt: Date;
     }>;
 }

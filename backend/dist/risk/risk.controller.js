@@ -23,6 +23,12 @@ let RiskController = class RiskController {
     predictRisk(projectId) {
         return this.riskService.predictRisk(projectId);
     }
+    findAll() {
+        return this.riskService.findAll();
+    }
+    findByProject(projectId) {
+        return this.riskService.findByProject(projectId);
+    }
 };
 exports.RiskController = RiskController;
 __decorate([
@@ -32,6 +38,19 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], RiskController.prototype, "predictRisk", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], RiskController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('project/:projectId'),
+    __param(0, (0, common_1.Param)('projectId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RiskController.prototype, "findByProject", null);
 exports.RiskController = RiskController = __decorate([
     (0, common_1.Controller)('api/v1/risk'),
     __metadata("design:paramtypes", [risk_service_1.RiskService])

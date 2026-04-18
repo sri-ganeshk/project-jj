@@ -47,6 +47,17 @@ Return a JSON object containing a float 'riskScore' between 0.0 and 1.0, a strin
         });
         return result;
     }
+    async findAll() {
+        return this.prisma.riskPrediction.findMany({
+            orderBy: { predictedAt: 'desc' },
+        });
+    }
+    async findByProject(projectId) {
+        return this.prisma.riskPrediction.findMany({
+            where: { projectId },
+            orderBy: { predictedAt: 'asc' },
+        });
+    }
 };
 exports.RiskService = RiskService;
 exports.RiskService = RiskService = __decorate([

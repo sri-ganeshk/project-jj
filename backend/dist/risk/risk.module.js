@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RiskModule = void 0;
 const common_1 = require("@nestjs/common");
+const ai_module_1 = require("../ai/ai.module");
 const risk_controller_1 = require("./risk.controller");
 const risk_service_1 = require("./risk.service");
 let RiskModule = class RiskModule {
@@ -15,6 +16,7 @@ let RiskModule = class RiskModule {
 exports.RiskModule = RiskModule;
 exports.RiskModule = RiskModule = __decorate([
     (0, common_1.Module)({
+        imports: [ai_module_1.AiModule],
         controllers: [risk_controller_1.RiskController],
         providers: [risk_service_1.RiskService],
     })

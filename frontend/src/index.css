@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
 
 @theme {
   --color-background: #11131c;
@@ -24,34 +24,187 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold;
   }
+
+  /* ── Override Chrome autofill yellow background ── */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #32343e inset !important;
+    -webkit-text-fill-color: #e1e1ef !important;
+    caret-color: #e1e1ef;
+    border-radius: 8px;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* ── Remove default date/time picker icon on WebKit ── */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.7);
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /* ── Remove number input spinners ── */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] { -moz-appearance: textfield; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #494456; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6b6480; }
 }
 
 @layer components {
-  /* No-line rule, using tonal backgrounds */
+
+  /* ─── Cards ─────────────────────────────────── */
   .surface-card {
-    @apply bg-surface rounded-lg p-6 transition-colors duration-300;
+    @apply bg-surface rounded-xl p-6 transition-colors duration-300;
   }
-  
   .surface-card:hover {
     @apply bg-surfaceHigh;
   }
-  
-  /* AI Insights glass effect */
+
+  /* ─── AI glass panel ────────────────────────── */
   .ai-glass {
-    @apply bg-surface/40 backdrop-blur-md border border-outlineVariant/20 rounded-lg p-6;
+    @apply bg-surface/40 backdrop-blur-md border border-outlineVariant/20 rounded-xl p-6;
   }
   
   .ghost-border {
     @apply border border-outlineVariant/20;
   }
-  
-  /* Primary Action Gradient */
+
+  /* ─── Buttons ───────────────────────────────── */
   .btn-primary {
-    @apply bg-gradient-to-br from-primaryContainer to-tertiaryContainer text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:shadow-primaryContainer/30 transition-all duration-300 border-none outline-none;
+    @apply bg-gradient-to-br from-primaryContainer to-tertiaryContainer 
+           text-white font-semibold py-2 px-5 rounded-lg shadow-lg 
+           hover:shadow-primaryContainer/30 hover:brightness-110
+           transition-all duration-200 border-none outline-none 
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
   }
 
-  /* Secondary Action */
   .btn-secondary {
-    @apply bg-surfaceHigh text-primary font-medium py-2 px-4 rounded-lg hover:bg-surface/80 transition-all border border-outlineVariant/20;
+    @apply bg-surfaceHigh text-primary font-semibold py-2 px-5 rounded-lg 
+           hover:bg-surfaceHighest transition-all border border-outlineVariant/20
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
   }
+
+  .btn-danger {
+    @apply bg-errorContainer/80 text-error font-semibold py-2 px-5 rounded-lg 
+           hover:bg-errorContainer transition-all border border-error/20
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+  }
+
+  /* ─── Form Inputs ───────────────────────────── */
+  .form-label {
+    @apply text-sm font-medium text-[#cbc3d9] mb-1.5 block;
+  }
+
+  .form-input {
+    @apply w-full bg-surfaceHigh border border-outlineVariant/30 
+           text-[#e1e1ef] rounded-lg px-4 py-2.5 outline-none
+           focus:border-primary/60 focus:ring-2 focus:ring-primary/20 
+           transition-all duration-200 placeholder-[#6e6b7b]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Custom select — removes system arrow, adds custom chevron */
+  .form-select {
+    @apply w-full bg-surfaceHigh border border-outlineVariant/30
+           text-[#e1e1ef] rounded-lg px-4 py-2.5 outline-none
+           focus:border-primary/60 focus:ring-2 focus:ring-primary/20
+           transition-all duration-200 placeholder-[#6e6b7b]
+           disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23cbc3d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 2.5rem;
+  }
+
+  /* Date input styled like text input */
+  .form-date {
+    @apply w-full bg-surfaceHigh border border-outlineVariant/30
+           text-[#e1e1ef] rounded-lg px-4 py-2.5 outline-none
+           focus:border-primary/60 focus:ring-2 focus:ring-primary/20
+           transition-all duration-200 placeholder-[#6e6b7b]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    color-scheme: dark;
+  }
+
+  .form-field {
+    @apply flex flex-col gap-1;
+  }
+
+  /* ─── Modal overlay ──────────────────────────── */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center 
+           bg-black/60 backdrop-blur-sm;
+    animation: fadeIn 0.15s ease;
+  }
+
+  .modal-panel {
+    @apply bg-surface border border-outlineVariant/30 rounded-2xl 
+           shadow-2xl w-full mx-4 overflow-hidden;
+    animation: slideUp 0.2s ease;
+  }
+
+  .modal-header {
+    @apply flex items-center justify-between px-6 py-5 
+           border-b border-outlineVariant/20;
+  }
+
+  .modal-body {
+    @apply px-6 py-5 overflow-y-auto;
+    max-height: 70vh;
+  }
+
+  .modal-footer {
+    @apply flex items-center justify-end gap-3 px-6 py-4 
+           border-t border-outlineVariant/20 bg-surface;
+  }
+
+  /* ─── Status badges ──────────────────────────── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide;
+  }
+  .badge-active    { @apply bg-[#10b981]/20 text-[#10b981]; }
+  .badge-planning  { @apply bg-primary/20 text-primary; }
+  .badge-hold      { @apply bg-[#f59e0b]/20 text-[#f59e0b]; }
+  .badge-done      { @apply bg-surfaceHigh text-[#cbc3d9]; }
+  .badge-high      { @apply bg-errorContainer text-error; }
+  .badge-medium    { @apply bg-[#4635a7]/60 text-[#c7bfff]; }
+  .badge-low       { @apply bg-[#10b981]/20 text-[#10b981]; }
+  .badge-critical  { @apply bg-error text-white; }
 }
+
+/* ─── Keyframe animations ────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(93, 33, 223, 0.3); }
+  50%       { box-shadow: 0 0 20px 4px rgba(93, 33, 223, 0.15); }
+}
+
+.pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
