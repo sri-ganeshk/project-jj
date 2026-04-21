@@ -42,4 +42,25 @@ Return a JSON structure like: { "projectId": "some-id", "optimizedSchedule": [ {
     };
     return result;
   }
+
+  async applyOptimization(
+    projectId: string,
+    optimizedSchedule: Array<{
+      taskId: string;
+      suggestedStartDate: string;
+      suggestedResource: string;
+    }>,
+  ) {
+    const updates = optimizedSchedule.map((item) =>
+      this.prisma.task.update({
+        where: { id: item.taskId },
+        data: {
+          startDate: new Date(item.suggestedStartDate),
+          assignedTo: item.suggestedResource,
+        },
+      }),
+    );
+    await Promise.all(updates);
+    return { status: 'success', updatedCount: updates.length };
+  }
 }
