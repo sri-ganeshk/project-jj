@@ -66,9 +66,10 @@ export default function TaskBoard() {
       api.get('/resources').catch(() => ({ data: [] })),
     ])
       .then(([t, p, r]) => {
-        setTasks(t.data);
-        setProjects(p.data);
-        setResources(r.data);
+        const mapId = (x: Project | Task | Resource) => ({ ...x, id: x.id || x._id! });
+        setTasks(t.data.map(mapId));
+        setProjects(p.data.map(mapId));
+        setResources(r.data.map(mapId));
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -101,8 +102,9 @@ export default function TaskBoard() {
       setShowCreate(false);
       setForm(emptyForm);
       loadAll();
-    } catch (err: any) {
-      setFormError(err?.response?.data?.message ?? 'Failed to create task.');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setFormError(error?.response?.data?.message ?? 'Failed to create task.');
     } finally {
       setSaving(false);
     }
@@ -119,6 +121,7 @@ export default function TaskBoard() {
 
   const onDrop = async (e: React.DragEvent, status: Column) => {
     e.preventDefault();
+    setDragging(null);
     const id = e.dataTransfer.getData('taskId');
     if (!id) return;
     const task = tasks.find((t) => t.id === id);
@@ -215,7 +218,7 @@ export default function TaskBoard() {
 
                         <div className="mt-3 flex items-center justify-between text-xs text-[#cbc3d9]">
                           <span>Due {t.dueDate ? new Date(t.dueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : 'TBD'}</span>
-                          <Avatar name={t.resource?.name} />
+                          <Avatar name={typeof t.assignedTo === 'object' ? t.assignedTo?.name : undefined} />
                         </div>
                       </div>
                     ))

@@ -38,5 +38,4 @@ lerna-debug.log*
 .env.test
 .env.production
 
-# Prisma
-/generated/prisma
+# Prisma (removed - using Mongoose now)

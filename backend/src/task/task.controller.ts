@@ -25,6 +25,11 @@ export class TaskController {
     return this.taskService.findAll();
   }
 
+  @Get('project/:projectId')
+  findByProject(@Param('projectId') projectId: string) {
+    return this.taskService.findByProject(projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.taskService.findOne(id);

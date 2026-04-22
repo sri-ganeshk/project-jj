@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import api from '../api';
 import { Activity, Layout, AlertTriangle, Sparkles, RefreshCw, FileText, Zap } from 'lucide-react';
-import type { Project, RiskPrediction } from '../types';
+import type { Project, RiskPrediction, Task, Report, OptimizedSchedule } from '../types';
 import Modal from '../components/Modal';
+import ReportView from '../components/ReportView';
 
 // ── Severity colour map ──────────────────────────────────
 const severityStyle: Record<string, { pill: string; dot: string }> = {
@@ -42,7 +43,9 @@ export default function Dashboard() {
   const [showOptimizeModal, setShowOptimizeModal] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [aiRunning, setAiRunning] = useState(false);
-  const [aiResult, setAiResult] = useState<string | null>(null);
+  const [aiReportResult, setAiReportResult] = useState<Report | null>(null);
+  const [aiOptimizeResult, setAiOptimizeResult] = useState<OptimizedSchedule | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   const loadAll = useCallback(() => {
     setLoading(true);
@@ -52,9 +55,10 @@ export default function Dashboard() {
       api.get('/risk').catch(() => ({ data: [] })),
     ])
       .then(([p, t, r]) => {
-        setProjects(p.data);
-        setTasks(t.data);
-        setRisks(r.data);
+        const mapId = (x: Project | Task | RiskPrediction) => ({ ...x, id: x.id || x._id! });
+        setProjects(p.data.map(mapId));
+        setTasks(t.data.map(mapId));
+        setRisks(r.data.map(mapId));
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -74,12 +78,14 @@ export default function Dashboard() {
   const runReport = async () => {
     if (!selectedProjectId) return;
     setAiRunning(true);
-    setAiResult(null);
+    setAiReportResult(null);
+    setAiError(null);
     try {
       const res = await api.get(`/report/generate/${selectedProjectId}`);
-      setAiResult(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
-    } catch (err: any) {
-      setAiResult(`Error: ${err?.response?.data?.message ?? err.message}`);
+      setAiReportResult(res.data);
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message: string };
+      setAiError(`Error: ${error?.response?.data?.message ?? error.message}`);
     } finally {
       setAiRunning(false);
     }
@@ -89,12 +95,14 @@ export default function Dashboard() {
   const runOptimize = async () => {
     if (!selectedProjectId) return;
     setAiRunning(true);
-    setAiResult(null);
+    setAiOptimizeResult(null);
+    setAiError(null);
     try {
       const res = await api.post(`/scheduler/optimize/${selectedProjectId}`);
-      setAiResult(typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2));
-    } catch (err: any) {
-      setAiResult(`Error: ${err?.response?.data?.message ?? err.message}`);
+      setAiOptimizeResult(res.data);
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } }; message: string };
+      setAiError(`Error: ${error?.response?.data?.message ?? error.message}`);
     } finally {
       setAiRunning(false);
     }
@@ -103,7 +111,9 @@ export default function Dashboard() {
   // ── Open AI modal helper ───────────────────────────────
   const openAiModal = (type: 'report' | 'optimize') => {
     setSelectedProjectId(projects[0]?.id ?? '');
-    setAiResult(null);
+    setAiReportResult(null);
+    setAiOptimizeResult(null);
+    setAiError(null);
     if (type === 'report')   setShowReportModal(true);
     if (type === 'optimize') setShowOptimizeModal(true);
   };
@@ -232,11 +242,11 @@ export default function Dashboard() {
       </section>
 
       {/* ── AI Report Modal ── */}
-      <Modal
-        open={showReportModal}
-        onClose={() => { setShowReportModal(false); setAiResult(null); }}
-        title="Generate AI Executive Report"
-        maxWidth="max-w-lg"
+  <Modal
+    open={showReportModal}
+    onClose={() => { setShowReportModal(false); setAiReportResult(null); setAiError(null); }}
+    title="Generate AI Executive Report"
+    maxWidth="max-w-4xl"
         footer={
           <>
             <button onClick={() => setShowReportModal(false)} className="btn-secondary px-5">Close</button>
@@ -263,23 +273,25 @@ export default function Dashboard() {
               {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          {aiResult && (
-            <div className="mt-4 p-4 bg-surfaceHigh rounded-lg border border-outlineVariant/20">
-              <p className="text-xs text-[#cbc3d9] uppercase tracking-wider mb-2 font-semibold">Result</p>
-              <pre className="text-sm text-[#e1e1ef] whitespace-pre-wrap break-words max-h-60 overflow-y-auto">
-                {aiResult}
-              </pre>
+          {aiError && (
+            <div className="mt-4 p-4 bg-errorContainer text-error rounded-lg text-sm">
+              {aiError}
+            </div>
+          )}
+          {aiReportResult && (
+            <div className="mt-4 max-h-[60vh] overflow-y-auto">
+              <ReportView content={aiReportResult.reportContent} />
             </div>
           )}
         </div>
       </Modal>
 
       {/* ── AI Optimizer Modal ── */}
-      <Modal
-        open={showOptimizeModal}
-        onClose={() => { setShowOptimizeModal(false); setAiResult(null); }}
-        title="Run AI Schedule Optimizer"
-        maxWidth="max-w-lg"
+  <Modal
+    open={showOptimizeModal}
+    onClose={() => { setShowOptimizeModal(false); setAiOptimizeResult(null); setAiError(null); }}
+    title="Run AI Schedule Optimizer"
+    maxWidth="max-w-4xl"
         footer={
           <>
             <button onClick={() => setShowOptimizeModal(false)} className="btn-secondary px-5">Close</button>
@@ -306,12 +318,45 @@ export default function Dashboard() {
               {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          {aiResult && (
-            <div className="mt-4 p-4 bg-surfaceHigh rounded-lg border border-outlineVariant/20">
-              <p className="text-xs text-[#cbc3d9] uppercase tracking-wider mb-2 font-semibold">Optimization Result</p>
-              <pre className="text-sm text-[#e1e1ef] whitespace-pre-wrap break-words max-h-60 overflow-y-auto">
-                {aiResult}
-              </pre>
+          {aiError && (
+            <div className="mt-4 p-4 bg-errorContainer text-error rounded-lg text-sm">
+              {aiError}
+            </div>
+          )}
+          {aiOptimizeResult && (
+            <div className="mt-4 max-h-[60vh] overflow-y-auto">
+              {aiOptimizeResult.conflicts.length > 0 && (
+                <div className="mb-4 p-4 bg-[#ffb4ab]/10 border border-[#ffb4ab]/20 rounded-xl">
+                  <h4 className="text-[#ffb4ab] font-semibold text-sm mb-2 flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" /> Schedule Conflicts Detected
+                  </h4>
+                  <ul className="list-disc pl-5 text-sm text-[#ffb4ab]/80 space-y-1">
+                    {aiOptimizeResult.conflicts.map((c, i) => <li key={i}>{c}</li>)}
+                  </ul>
+                </div>
+              )}
+              <div className="surface-card ghost-border p-0 overflow-hidden !hover:bg-surface overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-[#191b24] border-b border-outlineVariant/20 text-[#cbc3d9] text-xs uppercase tracking-wider">
+                      <th className="p-4 font-semibold">Task</th>
+                      <th className="p-4 font-semibold">Suggested Start</th>
+                      <th className="p-4 font-semibold">Resource</th>
+                      <th className="p-4 font-semibold">Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outlineVariant/10">
+                    {aiOptimizeResult.schedule.map((entry, idx) => (
+                      <tr key={idx} className="hover:bg-surfaceHigh/60 transition-colors">
+                        <td className="p-4 font-medium text-sm text-white">{entry.taskTitle}</td>
+                        <td className="p-4 text-sm">{entry.suggestedStartDate}</td>
+                        <td className="p-4 text-sm text-primary font-medium">{entry.resourceName}</td>
+                        <td className="p-4 text-xs text-[#cbc3d9] max-w-xs truncate" title={entry.reason}>{entry.reason || 'N/A'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

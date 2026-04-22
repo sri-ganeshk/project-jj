@@ -9,4 +9,9 @@ export class ReportController {
   generateReport(@Param('projectId') projectId: string) {
     return this.reportService.generateReport(projectId);
   }
+
+  @Get('project/:projectId')
+  findByProject(@Param('projectId') projectId: string) {
+    return this.reportService.findByProject(projectId);
+  }
 }

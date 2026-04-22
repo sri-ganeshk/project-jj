@@ -25,6 +25,11 @@ export class ResourceController {
     return this.resourceService.findAll();
   }
 
+  @Get('project/:projectId')
+  findByProject(@Param('projectId') projectId: string) {
+    return this.resourceService.findByProject(projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.resourceService.findOne(id);

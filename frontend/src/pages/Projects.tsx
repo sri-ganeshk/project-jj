@@ -45,7 +45,10 @@ export default function Projects() {
     setLoading(true);
     api
       .get('/projects')
-      .then((res) => setProjects(res.data))
+      .then((res) => {
+        const mapId = (x: Project) => ({ ...x, id: x.id || x._id! });
+        setProjects(res.data.map(mapId));
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   };
@@ -81,8 +84,9 @@ export default function Projects() {
       setShowCreate(false);
       setForm(emptyForm);
       loadProjects();
-    } catch (err: any) {
-      setFormError(err?.response?.data?.message ?? 'Failed to create project.');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setFormError(error?.response?.data?.message ?? 'Failed to create project.');
     } finally {
       setSaving(false);
     }
@@ -96,7 +100,7 @@ export default function Projects() {
       await api.delete(`/projects/${deleteId}`);
       setDeleteId(null);
       loadProjects();
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
     } finally {
       setDeleting(false);

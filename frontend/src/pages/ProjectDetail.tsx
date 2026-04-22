@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Sparkles, Calendar, DollarSign, Users, Plus, ArrowLeft, RefreshCw, CheckSquare } from 'lucide-react';
-import type { Project, Task, Resource, RiskPrediction, CreateTaskPayload } from '../types';
+import { Sparkles, Calendar, DollarSign, Users, Plus, ArrowLeft, RefreshCw, CheckSquare, FileText, LayoutList } from 'lucide-react';
+import type { Project, Task, Resource, RiskPrediction, CreateTaskPayload, OptimizedSchedule, Report } from '../types';
 import Modal from '../components/Modal';
+import ReportView from '../components/ReportView';
 
-type Tab = 'overview' | 'tasks' | 'resources';
+type Tab = 'overview' | 'tasks' | 'resources' | 'schedule' | 'report';
 
 const COLUMNS = ['To Do', 'In Progress', 'In Review', 'Done'] as const;
 
@@ -49,6 +50,8 @@ export default function ProjectDetail() {
 
   const [project, setProject]   = useState<Project | null>(null);
   const [risks, setRisks]       = useState<RiskPrediction[]>([]);
+  const [schedules, setSchedules] = useState<OptimizedSchedule[]>([]);
+  const [reports, setReports]     = useState<Report[]>([]);
   const [loading, setLoading]   = useState(true);
   const [tab, setTab]           = useState<Tab>('overview');
 
@@ -58,26 +61,41 @@ export default function ProjectDetail() {
   const [taskSaving, setTaskSaving]   = useState(false);
   const [taskError, setTaskError]     = useState('');
 
+  // Resource modal
+  const [showResource, setShowResource] = useState(false);
+  const [resourceForm, setResourceForm] = useState({ name: '', role: '', availabilityHours: 40, skillSet: '' });
+  const [resourceSaving, setResourceSaving] = useState(false);
+  const [resourceError, setResourceError] = useState('');
+
   // AI panel
   const [aiRunning, setAiRunning]   = useState(false);
-  const [aiResult, setAiResult]     = useState<{ type: string; data: any } | null>(null);
 
-  const loadProject = useCallback(() => {
+  const loadProjectData = useCallback(() => {
     if (!id) return;
     setLoading(true);
     Promise.all([
       api.get(`/projects/${id}`),
       api.get(`/risk/project/${id}`).catch(() => ({ data: [] })),
+      api.get(`/scheduler/history/${id}`).catch(() => ({ data: [] })),
+      api.get(`/report/project/${id}`).catch(() => ({ data: [] })),
     ])
-      .then(([p, r]) => {
-        setProject(p.data);
-        setRisks(r.data);
+      .then(([pRes, rRes, sRes, repRes]) => {
+        const p = pRes.data;
+        if (p) {
+          p.id = p.id || p._id;
+          if (p.tasks) p.tasks = p.tasks.map((x: Task) => ({ ...x, id: x.id || x._id! }));
+          if (p.resources) p.resources = p.resources.map((x: Resource) => ({ ...x, id: x.id || x._id! }));
+        }
+        setProject(p);
+        setRisks(rRes.data);
+        setSchedules(sRes.data);
+        setReports(repRes.data);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id]);
 
-  useEffect(() => { loadProject(); }, [loadProject]);
+  useEffect(() => { loadProjectData(); }, [loadProjectData]);
 
   // ── Create task ────────────────────────────────────────
   const handleTaskField = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -97,46 +115,87 @@ export default function ProjectDetail() {
         assignedTo: taskForm.assignedTo || undefined,
       });
       setShowTask(false);
-      loadProject();
-    } catch (err: any) {
-      setTaskError(err?.response?.data?.message ?? 'Failed to create task.');
+      loadProjectData();
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setTaskError(error?.response?.data?.message ?? 'Failed to create task.');
     } finally {
       setTaskSaving(false);
     }
   };
 
-  // ── AI: Run Risk ──────────────────────────────────────
+  // ── Create resource ────────────────────────────────────────
+  const handleResourceField = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    setResourceForm((f) => ({ ...f, [name]: type === 'number' ? Number(value) : value }));
+  };
+
+  const submitResource = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResourceError('');
+    if (!resourceForm.name.trim() || !resourceForm.role.trim()) { setResourceError('Name and Role are required.'); return; }
+    setResourceSaving(true);
+    try {
+      await api.post('/resources', {
+        ...resourceForm,
+        projectId: project?.id,
+      });
+      setShowResource(false);
+      loadProjectData();
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setResourceError(error?.response?.data?.message ?? 'Failed to add resource.');
+    } finally {
+      setResourceSaving(false);
+    }
+  };
+
+  // ── AI actions ────────────────────────────────────────
   const handleRisk = async () => {
     if (!project) return;
     setAiRunning(true);
-    setAiResult(null);
     try {
-      const res = await api.get(`/risk/predict/${project.id}`);
-      setAiResult({ type: 'risk', data: res.data });
-      loadProject(); // refresh risk data
-    } catch (err: any) {
-      setAiResult({ type: 'error', data: err?.response?.data?.message ?? 'Failed to run risk assessment.' });
+      await api.get(`/risk/predict/${project.id}`);
+      loadProjectData();
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      alert(error?.response?.data?.message ?? 'Failed to run risk assessment.');
     } finally {
       setAiRunning(false);
     }
   };
 
-  // ── AI: Optimize ──────────────────────────────────────
   const handleOptimize = async () => {
     if (!project) return;
     setAiRunning(true);
-    setAiResult(null);
     try {
-      const res = await api.post(`/scheduler/optimize/${project.id}`);
-      setAiResult({ type: 'optimize', data: res.data });
-    } catch (err: any) {
-      setAiResult({ type: 'error', data: err?.response?.data?.message ?? 'Failed to optimize schedule.' });
+      await api.post(`/scheduler/optimize/${project.id}`);
+      loadProjectData();
+      setTab('schedule');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      alert(error?.response?.data?.message ?? 'Failed to optimize schedule.');
     } finally {
       setAiRunning(false);
     }
   };
 
-  if (loading) {
+  const handleReport = async () => {
+    if (!project) return;
+    setAiRunning(true);
+    try {
+      await api.get(`/report/generate/${project.id}`);
+      loadProjectData();
+      setTab('report');
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      alert(error?.response?.data?.message ?? 'Failed to generate report.');
+    } finally {
+      setAiRunning(false);
+    }
+  };
+
+  if (loading && !project) {
     return (
       <div className="p-8 flex items-center gap-3 text-[#cbc3d9] animate-pulse">
         <RefreshCw className="w-5 h-5 animate-spin" /> Loading project…
@@ -153,7 +212,9 @@ export default function ProjectDetail() {
     );
   }
 
-  const latestRisk = risks[risks.length - 1];
+  const latestRisk = risks[0];
+  const latestSchedule = schedules[0];
+  const latestReport = reports[0];
   const tasksByStatus = COLUMNS.map((col) => ({
     col,
     count: (project.tasks ?? []).filter((t: Task) => t.status === col).length,
@@ -195,17 +256,18 @@ export default function ProjectDetail() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-0 border-b border-outlineVariant/20">
-          {(['overview', 'tasks', 'resources'] as Tab[]).map((t) => (
+        <div className="flex gap-0 border-b border-outlineVariant/20 overflow-x-auto">
+          {(['overview', 'tasks', 'resources', 'schedule', 'report'] as Tab[]).map((t) => (
             <button
               key={t}
-              id={`tab-${t}`}
               onClick={() => setTab(t)}
-              className={`px-5 py-3 text-sm font-medium capitalize transition-colors border-b-2 -mb-px
+              className={`px-5 py-3 text-sm font-medium capitalize transition-colors border-b-2 whitespace-nowrap -mb-px flex items-center gap-2
                 ${tab === t
                   ? 'text-primary border-primary'
                   : 'text-[#cbc3d9] border-transparent hover:text-white hover:border-outlineVariant/40'}`}
             >
+              {t === 'schedule' && <LayoutList className="w-4 h-4" />}
+              {t === 'report' && <FileText className="w-4 h-4" />}
               {t}
             </button>
           ))}
@@ -215,7 +277,7 @@ export default function ProjectDetail() {
         <div>
           {/* Overview */}
           {tab === 'overview' && (
-            <div className="space-y-5">
+            <div className="space-y-6">
               {/* Task status breakdown */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {tasksByStatus.map(({ col, count }) => (
@@ -229,26 +291,41 @@ export default function ProjectDetail() {
               {/* Latest risk */}
               {latestRisk && (
                 <div className="surface-card ghost-border">
-                  <h3 className="text-sm uppercase tracking-wider text-[#cbc3d9] mb-3">Latest Risk Assessment</h3>
-                  <div className="flex items-center justify-between">
+                  <h3 className="text-sm uppercase tracking-wider text-[#cbc3d9] mb-4">Latest Risk Assessment</h3>
+                  <div className="flex items-center justify-between mb-4 pb-4 border-b border-outlineVariant/20">
                     <div>
-                      <p className="font-semibold text-white">{latestRisk.riskType}</p>
-                      <p className="text-sm text-[#cbc3d9] mt-1">{latestRisk.mitigationSuggestion}</p>
+                      <p className="font-semibold text-white text-lg">{latestRisk.riskType}</p>
+                      <p className="text-sm text-[#cbc3d9] mt-1">Severity mapping to predictive score limits.</p>
                     </div>
                     <div className="text-right flex-shrink-0">
                       <span className={severityStyle[latestRisk.severity]?.pill ?? 'badge badge-done'}>
                         {latestRisk.severity}
                       </span>
-                      <p className="text-2xl font-bold mt-2 text-white">{latestRisk.riskScore.toFixed(2)}</p>
+                      <p className="text-3xl font-bold mt-2 text-white">{latestRisk.riskScore.toFixed(2)}</p>
                       <p className="text-xs text-[#cbc3d9]">risk score</p>
                     </div>
                   </div>
+                  
+                  {latestRisk.topRisks && latestRisk.topRisks.length > 0 && (
+                    <div>
+                      <h4 className="text-xs uppercase tracking-wider text-[#cbc3d9] mb-3">Top Risk Areas</h4>
+                      <div className="space-y-3">
+                        {latestRisk.topRisks.map((tr, idx) => (
+                          <div key={idx} className="bg-surfaceHigh/50 p-3 rounded-lg border border-outlineVariant/10">
+                            <p className="font-medium text-sm text-white">{tr.area}</p>
+                            <p className="text-sm text-[#cbc3d9] mt-1.5"><strong className="text-primary/90">Mitigation:</strong> {tr.mitigationSuggestion}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               {!latestRisk && (
-                <div className="surface-card ghost-border text-[#cbc3d9] text-sm">
-                  No risk assessments yet. Use the <strong className="text-primary">Run AI Risk Assessment</strong> button in the side panel.
+                <div className="surface-card ghost-border text-[#cbc3d9] text-sm flex flex-col items-center justify-center py-10">
+                  <p>No risk assessments yet.</p>
+                  <button onClick={handleRisk} className="btn-secondary mt-4" disabled={aiRunning}>Run Initial Assessment</button>
                 </div>
               )}
             </div>
@@ -262,7 +339,6 @@ export default function ProjectDetail() {
                   Tasks ({project.tasks?.length ?? 0})
                 </h3>
                 <button
-                  id="add-task-detail-btn"
                   onClick={() => { setTaskForm(emptyTaskForm(project.id)); setTaskError(''); setShowTask(true); }}
                   className="btn-primary flex items-center gap-1.5 px-4 py-2 text-sm"
                 >
@@ -274,9 +350,12 @@ export default function ProjectDetail() {
                 <div className="divide-y divide-outlineVariant/10 surface-card ghost-border p-0 overflow-hidden !hover:bg-surface">
                   {project.tasks.map((t: Task) => (
                     <div key={t.id} className="flex items-center justify-between px-5 py-3.5 hover:bg-surfaceHigh transition-colors">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <CheckSquare className="w-4 h-4 text-[#cbc3d9] flex-shrink-0" />
-                        <span className="font-medium text-sm truncate">{t.title}</span>
+                      <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-3">
+                          <CheckSquare className="w-4 h-4 text-[#cbc3d9] flex-shrink-0" />
+                          <span className="font-medium text-sm truncate">{t.title}</span>
+                        </div>
+                        {typeof t.assignedTo === 'object' && t.assignedTo?.name && <span className="text-xs text-[#cbc3d9] ml-7 mt-1">Assigned to: {t.assignedTo.name}</span>}
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0 ml-4">
                         <span className={`text-xs font-semibold ${priorityColor[t.priority] ?? 'text-[#cbc3d9]'}`}>
@@ -303,22 +382,31 @@ export default function ProjectDetail() {
           {/* Resources */}
           {tab === 'resources' && (
             <div className="space-y-4">
-              <h3 className="text-base font-semibold flex items-center gap-2">
-                <Users className="w-5 h-5" /> Assigned Resources ({project.resources?.length ?? 0})
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-semibold flex items-center gap-2">
+                  <Users className="w-5 h-5" /> Assigned Resources ({project.resources?.length ?? 0})
+                </h3>
+                <button
+                  onClick={() => { setResourceForm({ name: '', role: '', availabilityHours: 40, skillSet: '' }); setResourceError(''); setShowResource(true); }}
+                  className="btn-primary flex items-center gap-1.5 px-4 py-2 text-sm"
+                >
+                  <Plus className="w-4 h-4" /> Add Resource
+                </button>
+              </div>
               {project.resources && project.resources.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.resources.map((r: Resource) => (
                     <div key={r.id} className="surface-card ghost-border flex items-center gap-4 py-4">
-                      <div className="w-10 h-10 rounded-full bg-primaryContainer flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full bg-primaryContainer flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                         {r.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium">{r.name}</p>
-                        <p className="text-sm text-[#cbc3d9]">{r.role}</p>
-                        {r.availabilityHours && (
-                          <p className="text-xs text-[#cbc3d9] mt-0.5">{r.availabilityHours}h available</p>
-                        )}
+                        <p className="font-semibold text-white">{r.name}</p>
+                        <p className="text-sm text-primary/80 font-medium">{r.role}</p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-[#cbc3d9]">
+                          {r.availabilityHours && <span>{r.availabilityHours}h available</span>}
+                          {r.skillSet && <span>Skills: {r.skillSet}</span>}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -330,91 +418,158 @@ export default function ProjectDetail() {
               )}
             </div>
           )}
-        </div>
-      </div>
 
-      {/* ── AI Side Panel ── */}
-      <aside className="w-80 flex-shrink-0 flex flex-col gap-5">
-        <div className="ai-glass flex flex-col gap-4">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" /> Strategic AI
-          </h3>
-          <div className="flex flex-col gap-3">
-            <button
-              id="run-risk-btn"
-              onClick={handleRisk}
-              disabled={aiRunning}
-              className="btn-primary flex items-center justify-center gap-2 py-3"
-            >
-              {aiRunning ? <RefreshCw className="w-4 h-4 animate-spin" /> : '⚠️'}
-              Run AI Risk Assessment
-            </button>
-            <button
-              id="run-optimize-btn"
-              onClick={handleOptimize}
-              disabled={aiRunning}
-              className="btn-secondary flex items-center justify-center gap-2 py-3"
-            >
-              {aiRunning ? <RefreshCw className="w-4 h-4 animate-spin" /> : '⚡'}
-              Optimize Schedule
-            </button>
-          </div>
+          {/* AI Schedule */}
+          {tab === 'schedule' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-semibold">AI Optimized Schedule</h3>
+                <button onClick={handleOptimize} disabled={aiRunning} className="btn-secondary text-sm px-4 py-1.5 flex items-center gap-2">
+                  {aiRunning ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  Regenerate Schedule
+                </button>
+              </div>
 
-          {/* Inline AI Result */}
-          {aiResult && (
-            <div className={`mt-2 p-4 rounded-lg text-sm border ${
-              aiResult.type === 'error'
-                ? 'bg-errorContainer/20 border-error/30 text-error'
-                : 'bg-surfaceHigh border-outlineVariant/20 text-[#e1e1ef]'
-            }`}>
-              <p className="text-xs uppercase tracking-wider text-[#cbc3d9] mb-2 font-semibold">
-                {aiResult.type === 'risk' ? 'Risk Result' : aiResult.type === 'optimize' ? 'Schedule Result' : 'Error'}
-              </p>
-              {aiResult.type === 'risk' && typeof aiResult.data === 'object' ? (
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-[#cbc3d9]">Risk Score</span>
-                    <span className="font-bold">{aiResult.data.riskScore?.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#cbc3d9]">Severity</span>
-                    <span className={`font-semibold ${aiResult.data.severity === 'High' || aiResult.data.severity === 'Critical' ? 'text-error' : 'text-primary'}`}>
-                      {aiResult.data.severity}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#cbc3d9]">Risk Type</span>
-                    <span className="text-right ml-4">{aiResult.data.riskType}</span>
-                  </div>
-                  {aiResult.data.topRisks?.[0] && (
-                    <div className="mt-2 pt-2 border-t border-outlineVariant/20 text-xs text-[#cbc3d9]">
-                      <strong className="text-white">Mitigation:</strong> {aiResult.data.topRisks[0].mitigationSuggestion}
+              {latestSchedule ? (
+                <div className="space-y-4">
+                  {latestSchedule.summary && (
+                    <div className="surface-card border-l-4 border-l-primary bg-primary/5 p-4 text-sm text-[#e1e1ef]">
+                      {latestSchedule.summary}
                     </div>
                   )}
+
+                  {latestSchedule.conflicts && latestSchedule.conflicts.length > 0 && (
+                    <div className="surface-card border-l-4 border-l-error bg-error/5 p-4 text-sm text-error">
+                      <strong>Conflicts detected:</strong>
+                      <ul className="list-disc pl-5 mt-2 space-y-1">
+                        {latestSchedule.conflicts.map((c, i) => <li key={i}>{c}</li>)}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div className="surface-card ghost-border p-0 overflow-hidden !hover:bg-surface overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-[#191b24] border-b border-outlineVariant/20 text-[#cbc3d9] text-xs uppercase tracking-wider">
+                          <th className="p-4 font-semibold">Task</th>
+                          <th className="p-4 font-semibold">Suggested Start</th>
+                          <th className="p-4 font-semibold">Resource</th>
+                          <th className="p-4 font-semibold">Reason</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-outlineVariant/10">
+                        {latestSchedule.schedule.map((entry, idx) => (
+                          <tr key={idx} className="hover:bg-surfaceHigh/60 transition-colors">
+                            <td className="p-4 font-medium text-sm text-white">{entry.taskTitle}</td>
+                            <td className="p-4 text-sm">{entry.suggestedStartDate}</td>
+                            <td className="p-4 text-sm text-primary font-medium">{entry.resourceName}</td>
+                            <td className="p-4 text-xs text-[#cbc3d9] max-w-xs truncate" title={entry.reason}>{entry.reason || 'N/A'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               ) : (
-                <pre className="whitespace-pre-wrap break-words text-xs">
-                  {typeof aiResult.data === 'string' ? aiResult.data : JSON.stringify(aiResult.data, null, 2)}
-                </pre>
+                <div className="p-10 text-center text-[#cbc3d9] surface-card ghost-border">
+                  <Sparkles className="w-8 h-8 text-outlineVariant mx-auto mb-3" />
+                  <p className="mb-4">No AI schedules generated yet.</p>
+                  <button onClick={handleOptimize} disabled={aiRunning} className="btn-primary">
+                    {aiRunning ? 'Generating...' : 'Generate Optimized Schedule'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* AI Report */}
+          {tab === 'report' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-semibold">Executive Report</h3>
+                <button onClick={handleReport} disabled={aiRunning} className="btn-secondary text-sm px-4 py-1.5 flex items-center gap-2">
+                  {aiRunning ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <FileText className="w-3.5 h-3.5" />}
+                  Generate New Report
+                </button>
+              </div>
+
+              {latestReport ? (
+                <ReportView content={latestReport.reportContent} />
+              ) : (
+                <div className="p-10 text-center text-[#cbc3d9] surface-card ghost-border">
+                  <FileText className="w-8 h-8 text-outlineVariant mx-auto mb-3" />
+                  <p className="mb-4">No reports generated yet.</p>
+                  <button onClick={handleReport} disabled={aiRunning} className="btn-primary">
+                    {aiRunning ? 'Generating...' : 'Generate Executive Report'}
+                  </button>
+                </div>
               )}
             </div>
           )}
         </div>
+      </div>
 
-        {/* Risk history */}
-        {risks.length > 0 && (
-          <div className="surface-card ghost-border">
+      {/* ── Action Side Panel ── */}
+      <aside className="w-72 flex-shrink-0 flex flex-col gap-4">
+        <div className="surface-card ghost-border p-5">
+          <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-[#cbc3d9] flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-primary" /> AI Assistants
+          </h3>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleRisk}
+              disabled={aiRunning}
+              className="btn-secondary flex items-center gap-2 py-2.5 text-sm"
+            >
+              <span className="text-xl leading-none">⚠️</span> Risk Assessment
+            </button>
+            <button
+              onClick={handleOptimize}
+              disabled={aiRunning}
+              className="btn-secondary flex items-center gap-2 py-2.5 text-sm"
+            >
+              <span className="text-xl leading-none">⚡</span> Optimize Schedule
+            </button>
+            <button
+              onClick={handleReport}
+              disabled={aiRunning}
+              className="btn-secondary flex items-center gap-2 py-2.5 text-sm"
+            >
+              <span className="text-xl leading-none">📄</span> Generate Report
+            </button>
+          </div>
+          {aiRunning && (
+            <div className="mt-4 text-xs text-primary flex items-center gap-2 animate-pulse justify-center">
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" /> AI is processing...
+            </div>
+          )}
+        </div>
+
+        {/* History Summaries */}
+        {schedules.length > 0 && (
+          <div className="surface-card p-4 border border-outlineVariant/10">
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-[#cbc3d9]">
-              Risk History ({risks.length})
+              Schedule History
             </h4>
             <ul className="space-y-2">
-              {risks.slice(-4).reverse().map((r) => (
-                <li key={r.id} className="flex items-center justify-between text-sm">
-                  <span className="text-[#cbc3d9] text-xs">
-                    {new Date(r.predictedAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short' })}
-                  </span>
-                  <span className="font-mono font-semibold">{r.riskScore.toFixed(2)}</span>
-                  <span className={severityStyle[r.severity]?.pill ?? 'badge badge-done'}>{r.severity}</span>
+              {schedules.slice(0, 3).map((s) => (
+                <li key={s.id} className="text-xs flex justify-between">
+                  <span className="text-[#cbc3d9]">{new Date(s.generatedAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {reports.length > 0 && (
+          <div className="surface-card p-4 border border-outlineVariant/10">
+            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-[#cbc3d9]">
+              Report History
+            </h4>
+            <ul className="space-y-2">
+              {reports.slice(0, 3).map((r) => (
+                <li key={r.id} className="text-xs flex justify-between">
+                  <span className="text-[#cbc3d9]">{new Date(r.generatedAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' })}</span>
                 </li>
               ))}
             </ul>
@@ -422,17 +577,16 @@ export default function ProjectDetail() {
         )}
       </aside>
 
-      {/* ── Add Task Modal (pre-filled with projectId) ── */}
+      {/* ── Add Task Modal ── */}
       <Modal
         open={showTask}
         onClose={() => setShowTask(false)}
-        title={`Add Task to ${project.name}`}
+        title={`Add Task`}
         maxWidth="max-w-xl"
         footer={
           <>
             <button onClick={() => setShowTask(false)} className="btn-secondary px-5">Cancel</button>
             <button
-              id="create-task-detail-submit"
               form="add-task-form"
               type="submit"
               disabled={taskSaving}
@@ -501,6 +655,59 @@ export default function ProjectDetail() {
               </select>
             </div>
           )}
+        </form>
+      </Modal>
+
+      {/* ── Add Resource Modal ── */}
+      <Modal
+        open={showResource}
+        onClose={() => setShowResource(false)}
+        title={`Add Resource`}
+        maxWidth="max-w-md"
+        footer={
+          <>
+            <button onClick={() => setShowResource(false)} className="btn-secondary px-5">Cancel</button>
+            <button
+              form="add-resource-form"
+              type="submit"
+              disabled={resourceSaving}
+              className="btn-primary px-6"
+            >
+              {resourceSaving ? 'Saving…' : 'Add Resource'}
+            </button>
+          </>
+        }
+      >
+        <form id="add-resource-form" onSubmit={submitResource} className="space-y-4" autoComplete="off">
+          {resourceError && (
+            <div className="px-4 py-3 bg-errorContainer/30 border border-error/30 rounded-lg text-error text-sm">
+              {resourceError}
+            </div>
+          )}
+
+          <div className="form-field">
+            <label htmlFor="r-name" className="form-label">Name *</label>
+            <input id="r-name" name="name" type="text" className="form-input"
+              placeholder="e.g. Alice Smith" value={resourceForm.name} onChange={handleResourceField} autoFocus required />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="r-role" className="form-label">Role *</label>
+            <input id="r-role" name="role" type="text" className="form-input"
+              placeholder="e.g. Backend Developer" value={resourceForm.role} onChange={handleResourceField} required />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="r-skills" className="form-label">Skill Set</label>
+            <input id="r-skills" name="skillSet" type="text" className="form-input"
+              placeholder="e.g. Node.js, MongoDB, React" value={resourceForm.skillSet} onChange={handleResourceField} />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="r-hours" className="form-label">Availability (Hours/Week)</label>
+            <input id="r-hours" name="availabilityHours" type="number" min={1} className="form-input"
+              value={resourceForm.availabilityHours} onChange={handleResourceField} />
+          </div>
         </form>
       </Modal>
     </div>

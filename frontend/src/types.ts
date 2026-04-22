@@ -1,4 +1,5 @@
 export interface Project {
+  _id?: string;
   id: string;
   name: string;
   status: string;
@@ -12,6 +13,7 @@ export interface Project {
 }
 
 export interface Task {
+  _id?: string;
   id: string;
   projectId: string;
   title: string;
@@ -21,12 +23,13 @@ export interface Task {
   estimatedHours: number;
   actualHours?: number;
   dueDate: string;
-  assignedTo?: string;
+  assignedTo?: string | Resource;
   resource?: Resource;
   complexityScore?: number;
 }
 
 export interface Resource {
+  _id?: string;
   id: string;
   name: string;
   role: string;
@@ -36,6 +39,7 @@ export interface Resource {
 }
 
 export interface RiskPrediction {
+  _id?: string;
   id: string;
   projectId: string;
   riskType: string;
@@ -43,6 +47,7 @@ export interface RiskPrediction {
   severity: 'Low' | 'Medium' | 'High' | 'Critical';
   affectedArea: string;
   mitigationSuggestion: string;
+  topRisks?: Array<{ area: string; mitigationSuggestion: string }>;
   predictedAt: string;
 }
 
@@ -52,6 +57,25 @@ export interface Report {
   reportType: string;
   format: string;
   filePath: string;
+  reportContent: string;
+  generatedAt: string;
+}
+
+export interface ScheduleEntry {
+  taskId: string;
+  taskTitle: string;
+  suggestedStartDate: string;
+  suggestedResource: string;
+  resourceName: string;
+  reason?: string;
+}
+
+export interface OptimizedSchedule {
+  id?: string;
+  projectId: string;
+  schedule: ScheduleEntry[];
+  conflicts: string[];
+  summary?: string;
   generatedAt: string;
 }
 
