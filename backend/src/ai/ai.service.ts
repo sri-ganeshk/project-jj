@@ -28,9 +28,11 @@ export class AiService {
           e.status === 503 ||
           e.message?.includes('503') ||
           e.status === 429 ||
-          e.message?.includes('429');
+          e.message?.includes('429') ||
+          e.message?.includes('JSON_PARSE_ERROR');
 
         if (isTransient && attempt < maxRetries) {
+          console.warn(`Transient error/Parse error encountered (attempt ${attempt}/${maxRetries}): ${e.message}. Retrying...`);
           const delay = baseDelayMs * Math.pow(2, attempt - 1);
           await new Promise((resolve) => setTimeout(resolve, delay));
           continue;
@@ -38,7 +40,7 @@ export class AiService {
 
         console.error('AI Generation Error:', e.message);
         throw new HttpException(
-          'The AI assistant is temporarily unavailable. Please try again later.',
+          'The AI assistant is temporarily unavailable or failed to process the request. Please try again later.',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -55,8 +57,13 @@ export class AiService {
           responseMimeType: 'application/json',
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return JSON.parse(response.text || '{}');
+      const rawText = response.text || '{}';
+      try {
+        return JSON.parse(rawText);
+      } catch (err) {
+        console.error('JSON Parse Error in generateJson. Raw text:', rawText);
+        throw new Error(`JSON_PARSE_ERROR: ${(err as Error).message}`);
+      }
     });
   }
 
