@@ -19,6 +19,9 @@ export class Project {
 
   @Prop({ required: true })
   budget: number;
+
+  @Prop({ default: '' })
+  requiredSkills: string;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

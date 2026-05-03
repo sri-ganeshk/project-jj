@@ -70,4 +70,78 @@ export class ProjectService {
     await this.projectModel.findByIdAndDelete(id).exec();
     return { deleted: true };
   }
+
+  async attachResource(
+    projectId: string,
+    resourceId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    // Verify project exists
+    const project = await this.projectModel.findById(projectId).exec();
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectId} not found`);
+    }
+
+    // Verify resource exists
+    const resource = await this.resourceModel.findById(resourceId).exec();
+    if (!resource) {
+      throw new NotFoundException(`Resource with ID ${resourceId} not found`);
+    }
+
+    // Check if resource is already assigned to another project
+    if (
+      resource.projectId &&
+      resource.projectId.toString() !== projectId.toString()
+    ) {
+      throw new Error(
+        `Resource is already assigned to another project. Please detach it first.`,
+      );
+    }
+
+    // Assign resource to project
+    await this.resourceModel.findByIdAndUpdate(
+      resourceId,
+      { projectId },
+      { new: true },
+    );
+
+    return {
+      success: true,
+      message: `Resource assigned to project successfully`,
+    };
+  }
+
+  async detachResource(
+    projectId: string,
+    resourceId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    // Verify project exists
+    const project = await this.projectModel.findById(projectId).exec();
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${projectId} not found`);
+    }
+
+    // Verify resource exists and is assigned to this project
+    const resource = await this.resourceModel.findById(resourceId).exec();
+    if (!resource) {
+      throw new NotFoundException(`Resource with ID ${resourceId} not found`);
+    }
+
+    if (!resource.projectId || resource.projectId.toString() !== projectId) {
+      throw new Error(
+        `Resource is not assigned to this project or already unassigned`,
+      );
+    }
+
+    // Detach resource from project (set projectId to null)
+    await this.resourceModel.findByIdAndUpdate(
+      resourceId,
+      { $unset: { projectId: 1 } },
+      { new: true },
+    );
+
+    return {
+      success: true,
+      message: `Resource detached from project successfully`,
+    };
+  }
 }

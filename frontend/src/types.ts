@@ -6,6 +6,7 @@ export interface Project {
   budget: number;
   startDate: string;
   endDate: string;
+  requiredSkills?: string;
   createdAt?: string;
   tasks?: Task[];
   resources?: Resource[];
@@ -35,7 +36,7 @@ export interface Resource {
   role: string;
   availabilityHours?: number;
   skillSet?: string;
-  projectId?: string;
+  projectId?: { _id: string; name: string; status: string };
 }
 
 export interface RiskPrediction {
@@ -87,6 +88,7 @@ export interface CreateProjectPayload {
   budget: number;
   startDate: string;
   endDate: string;
+  requiredSkills?: string;
 }
 
 export interface CreateTaskPayload {

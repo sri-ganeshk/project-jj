@@ -39,4 +39,20 @@ export class ProjectController {
   remove(@Param('id') id: string) {
     return this.projectService.remove(id);
   }
+
+  @Post(':projectId/resources/:resourceId')
+  assignResource(
+    @Param('projectId') projectId: string,
+    @Param('resourceId') resourceId: string,
+  ) {
+    return this.projectService.attachResource(projectId, resourceId);
+  }
+
+  @Delete(':projectId/resources/:resourceId')
+  detachResource(
+    @Param('projectId') projectId: string,
+    @Param('resourceId') resourceId: string,
+  ) {
+    return this.projectService.detachResource(projectId, resourceId);
+  }
 }

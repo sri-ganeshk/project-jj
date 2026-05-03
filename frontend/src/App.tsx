@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, Columns } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Columns, Users } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import TaskBoard from './pages/TaskBoard';
+import Resources from './pages/Resources';
 
 import type { ElementType } from 'react';
 
@@ -35,6 +36,7 @@ function App() {
             <NavItem to="/" icon={LayoutDashboard} label="Dashboard" />
             <NavItem to="/projects" icon={FolderKanban} label="Projects" />
             <NavItem to="/tasks" icon={Columns} label="Tasks Board" />
+            <NavItem to="/resources" icon={Users} label="Resources" />
           </nav>
         </aside>
         
@@ -44,6 +46,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/tasks" element={<TaskBoard />} />
+            <Route path="/resources" element={<Resources />} />
           </Routes>
         </main>
         

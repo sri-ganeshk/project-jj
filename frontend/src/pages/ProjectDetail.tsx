@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
-import { Sparkles, Calendar, DollarSign, Users, Plus, ArrowLeft, RefreshCw, CheckSquare, FileText, LayoutList } from 'lucide-react';
+import { Sparkles, Calendar, DollarSign, Users, Plus, ArrowLeft, RefreshCw, CheckSquare, FileText, LayoutList, Wand2, Trash2 } from 'lucide-react';
 import type { Project, Task, Resource, RiskPrediction, CreateTaskPayload, OptimizedSchedule, Report } from '../types';
 import Modal from '../components/Modal';
 import ReportView from '../components/ReportView';
+import ResourceSuggestion from '../components/ResourceSuggestion';
 
 type Tab = 'overview' | 'tasks' | 'resources' | 'schedule' | 'report';
 
@@ -66,6 +67,9 @@ export default function ProjectDetail() {
   const [resourceForm, setResourceForm] = useState({ name: '', role: '', availabilityHours: 40, skillSet: '' });
   const [resourceSaving, setResourceSaving] = useState(false);
   const [resourceError, setResourceError] = useState('');
+
+  // Resource suggestion modal
+  const [showSuggestion, setShowSuggestion] = useState(false);
 
   // AI panel
   const [aiRunning, setAiRunning]   = useState(false);
@@ -138,7 +142,6 @@ export default function ProjectDetail() {
     try {
       await api.post('/resources', {
         ...resourceForm,
-        projectId: project?.id,
       });
       setShowResource(false);
       loadProjectData();
@@ -147,6 +150,18 @@ export default function ProjectDetail() {
       setResourceError(error?.response?.data?.message ?? 'Failed to add resource.');
     } finally {
       setResourceSaving(false);
+    }
+  };
+
+  // ── Detach resource ────────────────────────────────────────
+  const handleDetachResource = async (resourceId: string) => {
+    if (!project || !confirm('Remove this resource from the project?')) return;
+    try {
+      await api.delete(`/projects/${project.id}/resources/${resourceId}`);
+      loadProjectData();
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      alert(error?.response?.data?.message ?? 'Failed to remove resource.');
     }
   };
 
@@ -382,25 +397,33 @@ export default function ProjectDetail() {
           {/* Resources */}
           {tab === 'resources' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <h3 className="text-base font-semibold flex items-center gap-2">
                   <Users className="w-5 h-5" /> Assigned Resources ({project.resources?.length ?? 0})
                 </h3>
-                <button
-                  onClick={() => { setResourceForm({ name: '', role: '', availabilityHours: 40, skillSet: '' }); setResourceError(''); setShowResource(true); }}
-                  className="btn-primary flex items-center gap-1.5 px-4 py-2 text-sm"
-                >
-                  <Plus className="w-4 h-4" /> Add Resource
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowSuggestion(true)}
+                    className="btn-secondary flex items-center gap-1.5 px-4 py-2 text-sm"
+                  >
+                    <Wand2 className="w-4 h-4" /> Suggest Resources
+                  </button>
+                  <button
+                    onClick={() => { setResourceForm({ name: '', role: '', availabilityHours: 40, skillSet: '' }); setResourceError(''); setShowResource(true); }}
+                    className="btn-primary flex items-center gap-1.5 px-4 py-2 text-sm"
+                  >
+                    <Plus className="w-4 h-4" /> Add Resource
+                  </button>
+                </div>
               </div>
               {project.resources && project.resources.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.resources.map((r: Resource) => (
-                    <div key={r.id} className="surface-card ghost-border flex items-center gap-4 py-4">
+                    <div key={r.id} className="surface-card ghost-border flex items-center gap-4 py-4 pr-3">
                       <div className="w-12 h-12 rounded-full bg-primaryContainer flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                         {r.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <p className="font-semibold text-white">{r.name}</p>
                         <p className="text-sm text-primary/80 font-medium">{r.role}</p>
                         <div className="flex items-center gap-3 mt-2 text-xs text-[#cbc3d9]">
@@ -408,6 +431,13 @@ export default function ProjectDetail() {
                           {r.skillSet && <span>Skills: {r.skillSet}</span>}
                         </div>
                       </div>
+                      <button
+                        onClick={() => handleDetachResource(r.id)}
+                        className="text-error hover:text-red-400 transition p-1 flex-shrink-0"
+                        title="Remove resource from project"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -710,6 +740,15 @@ export default function ProjectDetail() {
           </div>
         </form>
       </Modal>
+
+      {/* ── Resource Suggestion Modal ── */}
+      {showSuggestion && (
+        <ResourceSuggestion
+          projectId={project?.id ?? ''}
+          onClose={() => setShowSuggestion(false)}
+          onResourcesAdded={loadProjectData}
+        />
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ export type ResourceDocument = Resource & Document;
 
 @Schema({ timestamps: true })
 export class Resource {
-  @Prop({ type: Types.ObjectId, ref: 'Project', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'Project', required: false })
   projectId: Types.ObjectId;
 
   @Prop({ required: true })

@@ -23,6 +23,7 @@ const emptyForm: CreateProjectPayload = {
   budget: 10000,
   startDate: new Date().toISOString().split('T')[0],
   endDate: new Date(Date.now() + 30 * 86_400_000).toISOString().split('T')[0],
+  requiredSkills: '',
 };
 
 export default function Projects() {
@@ -257,6 +258,20 @@ export default function Projects() {
                 onChange={handleField}
               />
             </div>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="proj-skills" className="form-label">Required Skills (optional)</label>
+            <input
+              id="proj-skills"
+              name="requiredSkills"
+              type="text"
+              className="form-input"
+              placeholder="e.g. Node.js, MongoDB, React"
+              value={form.requiredSkills || ''}
+              onChange={handleField}
+            />
+            <p className="text-xs text-[#cbc3d9] mt-1">Comma-separated list of skills needed for resources on this project.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

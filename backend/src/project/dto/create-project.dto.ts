@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDateString, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -17,4 +17,8 @@ export class CreateProjectDto {
 
   @IsNumber()
   budget: number;
+
+  @IsString()
+  @IsOptional()
+  requiredSkills?: string;
 }

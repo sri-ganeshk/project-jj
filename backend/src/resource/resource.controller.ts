@@ -30,6 +30,11 @@ export class ResourceController {
     return this.resourceService.findByProject(projectId);
   }
 
+  @Get('suggestions/:projectId')
+  getSuggestedResources(@Param('projectId') projectId: string) {
+    return this.resourceService.getSuggestedResources(projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.resourceService.findOne(id);
